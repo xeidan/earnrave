@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>EarnRave App</title>
+  <link href="output.css" rel="stylesheet" />
+</head>
+<body class="bg-black text-white font-sans min-h-screen">
+
+  <!-- Header -->
+  <div class="flex justify-between items-center px-4 py-3 bg-white/5 backdrop-blur-md border-b border-white/10">
+    <div class="flex items-center space-x-3">
+      <img src="flag-us.svg" alt="US Flag" class="w-6 h-6 rounded-full">
+      <div>
+        <p class="text-sm font-medium">US Dollar</p>
+        <p class="text-xs text-white/70">CR1501989</p>
+        <p class="text-sm font-bold">0.00 USD</p>
+      </div>
+    </div>
+
+    <div class="flex items-center space-x-3">
+      <div class="flex items-center rounded-full bg-white/10 px-2 py-1 text-sm font-semibold">
+        <button class="px-2 py-1 rounded bg-transparent text-white/70">Demo</button>
+        <button class="px-2 py-1 rounded bg-white/20 text-white">Real</button>
+      </div>
+      <button><img src="bell.svg" alt="Notifications" class="w-5 h-5"></button>
+      <button><img src="profile.svg" alt="User" class="w-5 h-5"></button>
+    </div>
+  </div>
+
+  <!-- Actions -->
+  <div class="flex justify-around py-5">
+    <div class="flex flex-col items-center">
+      <div class="w-14 h-14 flex items-center justify-center bg-white rounded-xl text-black text-xl">+</div>
+      <p class="mt-2 text-sm">Deposit</p>
+    </div>
+    <div class="flex flex-col items-center">
+      <div class="w-14 h-14 flex items-center justify-center bg-white/5 border border-white/10 rounded-xl text-white text-xl">&#8211;</div>
+      <p class="mt-2 text-sm">Withdraw</p>
+    </div>
+    <div class="flex flex-col items-center">
+      <div class="w-14 h-14 flex items-center justify-center bg-white/5 border border-white/10 rounded-xl text-white text-xl">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 10l4-4m0 0l-4-4m4 4H3m4 14l-4-4m0 0l4-4m-4 4h18" />
+        </svg>
+      </div>
+      <p class="mt-2 text-sm">Transfer</p>
+    </div>
+  </div>
+
+  <hr class="border-white/10 mx-4">
+
+  <!-- Trade Types -->
+  <div class="px-4 pt-6">
+    <p class="text-sm text-white/70 mb-2">Select trade type</p>
+
+    <div class="space-y-4">
+      <div class="bg-white/5 border border-white/10 rounded-xl p-4">
+        <h2 class="text-lg font-semibold mb-1">Accumulators</h2>
+        <p class="text-sm text-white/70">Amplify potential profits with up to 5% compounding growth per tick.</p>
+      </div>
+
+      <div class="bg-white/5 border border-white/10 rounded-xl p-4">
+        <h2 class="text-lg font-semibold mb-1">Multipliers</h2>
+        <p class="text-sm text-white/70">Multipliers let you trade with leverage and limit your risk to your stake.</p>
+      </div>
+    </div>
+
+    <p class="text-sm text-white/70 mt-8 mb-2">CFDs</p>
+    <div class="bg-white/5 border border-white/10 rounded-xl p-4 flex items-center space-x-3">
+      <img src="dx.svg" alt="Deriv X" class="w-8 h-8">
+      <div>
+        <h2 class="text-base font-semibold">Deriv X</h2>
+        <p class="text-sm text-white/70">CFDs on a customisable trading platform.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bottom Nav -->
+  <nav class="fixed bottom-0 left-0 right-0 bg-black border-t border-white/10 flex justify-around py-2 text-sm">
+    <button class="flex flex-col items-center text-white">
+      <svg class="w-5 h-5 mb-1" fill="currentColor" viewBox="0 0 24 24"><path d="M3 12l2-2m0 0l7-7 7 7M13 5v6h6m4 4h-4v6h-6v-6H5v6H1v-6H0"/></svg>
+      Hub
+    </button>
+    <button class="flex flex-col items-center text-white/50">
+      <svg class="w-5 h-5 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+      Markets
+    </button>
+    <button class="flex flex-col items-center text-white/50">
+      <svg class="w-5 h-5 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M9 19V6h13M9 6l-7 7 7 7"/></svg>
+      Trade
+    </button>
+    <button class="flex flex-col items-center text-white/50">
+      <svg class="w-5 h-5 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"/></svg>
+      Positions
+    </button>
+  </nav>
+
+</body>
+</html>
