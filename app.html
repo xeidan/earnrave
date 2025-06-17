@@ -15,8 +15,15 @@
             <i class="fa-solid fa-user text-xl text-white/70"></i>
         </div>
         <div>
-            <p class="text-lg font-bold"><span class="font-normal">Hello,</span> Test User</p>
-            <p class="text-sm text-white/70">Welcome back</p>
+            <div id="user-greeting">
+                <p class="text-lg font-bold"><span class="font-normal">Hello,</span> Test User</p>
+                <p class="text-sm text-white/70">Welcome back</p>
+              </div>
+              
+              <div id="user-info-summary" class="hidden">
+                <p class="text-lg font-bold">ID: <span class="text-white/70">#RAVE-23094</span></p>
+                <p class="text-sm text-white/70">Balance: <span id="summary-balance">$60,000</span></p>
+              </div>              
         </div>
     </div>
 
@@ -380,31 +387,33 @@
     let currentMode = 'real'; // Keep track of current mode (real/demo)
 
     function showTab(tabId) {
-        // Hide all tab contents
-        document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
-        // Show the active tab content
-        document.getElementById(tabId).classList.remove('hidden');
+  // Hide all tab contents
+  document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+  document.getElementById(tabId).classList.remove('hidden');
 
-        // Reset all navigation buttons to inactive state
-        document.querySelectorAll('nav button').forEach(btn => {
-            btn.classList.remove('text-cyan-400');
-            btn.classList.add('text-white/50');
-            btn.querySelector('i')?.classList.remove('text-cyan-400');
-        });
+  // Update nav button states
+  document.querySelectorAll('nav button').forEach(btn => {
+    btn.classList.remove('text-cyan-400');
+    btn.classList.add('text-white/50');
+    btn.querySelector('i')?.classList.remove('text-cyan-400');
+  });
 
-        // Set active navigation button to active state
-        const activeBtn = document.getElementById(`nav-${tabId.replace('tab-', '')}`);
-        if (activeBtn) {
-            activeBtn.classList.remove('text-white/50');
-            activeBtn.classList.add('text-cyan-400');
-            activeBtn.querySelector('i')?.classList.add('text-cyan-400');
-        }
+  const activeBtn = document.getElementById(`nav-${tabId.replace('tab-', '')}`);
+  if (activeBtn) {
+    activeBtn.classList.remove('text-white/50');
+    activeBtn.classList.add('text-cyan-400');
+    activeBtn.querySelector('i')?.classList.add('text-cyan-400');
+  }
 
-        // When switching back to hub, ensure correct mode is displayed
-        if (tabId === 'tab-hub') {
-            toggleMode(currentMode); // Re-apply current mode display logic
-        }
-    }
+  // Toggle user greeting vs. balance summary
+  const isHub = tabId === 'tab-hub';
+  document.getElementById('user-greeting').classList.toggle('hidden', !isHub);
+  document.getElementById('user-info-summary').classList.toggle('hidden', isHub);
+
+  // Restore current mode content when returning to hub
+  if (isHub) toggleMode(currentMode);
+}
+
 
     function toggleMode(mode) {
         currentMode = mode; // Update current mode state
@@ -480,6 +489,7 @@
         showTab('tab-hub'); // Ensure Hub is selected on load
         toggleMode('real'); // Default to real mode and apply styles/balances
     });
+
 </script>
 
 
