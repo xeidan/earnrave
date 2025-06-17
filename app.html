@@ -4,98 +4,704 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>EarnRave App</title>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" rel="stylesheet">
   <link href="output.css" rel="stylesheet" />
 </head>
-<body class="bg-black text-white font-sans min-h-screen">
+<body class="bg-black text-white font-sans min-h-screen flex flex-col">
 
-  <!-- Header -->
-  <div class="flex justify-between items-center px-4 py-3 bg-white/5 backdrop-blur-md border-b border-white/10">
+  <header class="flex justify-between items-center px-4 py-4 sticky top-0 z-20 bg-black/80 backdrop-blur-sm border-b border-white/10">
     <div class="flex items-center space-x-3">
-      <img src="flag-us.svg" alt="US Flag" class="w-6 h-6 rounded-full">
-      <div>
-        <p class="text-sm font-medium">US Dollar</p>
-        <p class="text-xs text-white/70">CR1501989</p>
-        <p class="text-sm font-bold">0.00 USD</p>
-      </div>
+        <div class="w-12 h-12 flex-shrink-0 flex items-center justify-center rounded-full border border-white/20 bg-transparent">
+            <i class="fa-solid fa-user text-xl text-white/70"></i>
+        </div>
+        <div>
+            <p class="text-lg font-bold"><span class="font-normal">Hello,</span> Test User</p>
+            <p class="text-sm text-white/70">Welcome back</p>
+        </div>
     </div>
 
     <div class="flex items-center space-x-3">
-      <div class="flex items-center rounded-full bg-white/10 px-2 py-1 text-sm font-semibold">
-        <button class="px-2 py-1 rounded bg-transparent text-white/70">Demo</button>
-        <button class="px-2 py-1 rounded bg-white/20 text-white">Real</button>
-      </div>
-      <button><img src="bell.svg" alt="Notifications" class="w-5 h-5"></button>
-      <button><img src="profile.svg" alt="User" class="w-5 h-5"></button>
-    </div>
-  </div>
-
-  <!-- Actions -->
-  <div class="flex justify-around py-5">
-    <div class="flex flex-col items-center">
-      <div class="w-14 h-14 flex items-center justify-center bg-white rounded-xl text-black text-xl">+</div>
-      <p class="mt-2 text-sm">Deposit</p>
-    </div>
-    <div class="flex flex-col items-center">
-      <div class="w-14 h-14 flex items-center justify-center bg-white/5 border border-white/10 rounded-xl text-white text-xl">&#8211;</div>
-      <p class="mt-2 text-sm">Withdraw</p>
-    </div>
-    <div class="flex flex-col items-center">
-      <div class="w-14 h-14 flex items-center justify-center bg-white/5 border border-white/10 rounded-xl text-white text-xl">
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 10l4-4m0 0l-4-4m4 4H3m4 14l-4-4m0 0l4-4m-4 4h18" />
-        </svg>
-      </div>
-      <p class="mt-2 text-sm">Transfer</p>
-    </div>
-  </div>
-
-  <hr class="border-white/10 mx-4">
-
-  <!-- Trade Types -->
-  <div class="px-4 pt-6">
-    <p class="text-sm text-white/70 mb-2">Select trade type</p>
-
-    <div class="space-y-4">
-      <div class="bg-white/5 border border-white/10 rounded-xl p-4">
-        <h2 class="text-lg font-semibold mb-1">Accumulators</h2>
-        <p class="text-sm text-white/70">Amplify potential profits with up to 5% compounding growth per tick.</p>
-      </div>
-
-      <div class="bg-white/5 border border-white/10 rounded-xl p-4">
-        <h2 class="text-lg font-semibold mb-1">Multipliers</h2>
-        <p class="text-sm text-white/70">Multipliers let you trade with leverage and limit your risk to your stake.</p>
+      <div class="flex items-center rounded-lg bg-white/5 border border-white/10 p-1 ">
+        <button id="demo-btn" onclick="toggleMode('demo')" class="px-2 py-1 w-14 rounded-lg bg-transparent text-white/70 font-normal text-xs transition-colors duration-200">Demo</button>
+        <button id="real-btn" onclick="toggleMode('real')" class="px-2 py-1 w-14 rounded-lg bg-transparent text-white/70 font-normal text-xs transition-colors duration-200">Real</button>
       </div>
     </div>
+  </header>
 
-    <p class="text-sm text-white/70 mt-8 mb-2">CFDs</p>
-    <div class="bg-white/5 border border-white/10 rounded-xl p-4 flex items-center space-x-3">
-      <img src="dx.svg" alt="Deriv X" class="w-8 h-8">
-      <div>
-        <h2 class="text-base font-semibold">Deriv X</h2>
-        <p class="text-sm text-white/70">CFDs on a customisable trading platform.</p>
+  <main class=""> <section id="tab-hub" class="tab-content block px-4 py-6">
+    <!-- real -->
+      <div id="real-mode-display">
+        <div class="bg-white/5 border border-white/10 rounded-xl p-4 space-y-2 shadow-lg mb-6">
+            <div class="flex items-center justify-between">
+              <div>
+                <p class="text-xs text-white/70">Your Total Asset</p>
+                <h2 id="real-balance-amount" class="text-3xl font-extrabold text-white">$60,000</h2>
+              </div>
+              <button id="toggle-real-balance-eye" onclick="toggleBalance('real')">
+                <i id="real-balance-eye-icon" class="fa-solid fa-eye-slash text-white/70 text-lg"></i>
+              </button>
+            </div>
+            <div class="flex items-center space-x-4 text-cyan-400 text-sm font-semibold pt-1">
+              <div><i class="fa-solid fa-arrow-up"></i> +12.8%</div>
+              <div>+$15,000.00</div>
+            </div>
+            <div>
+              <p class="text-xs text-white/60">Available Balance</p>
+              <p id="real-available-balance" class="text-xl font-semibold text-white">$45,000</p>
+            </div>
+        </div>
+
+        <div class="flex justify-around py-5">
+          <div class="flex flex-col items-center">
+            <div class="w-14 h-14 flex items-center justify-center bg-white rounded-xl text-black text-xl hover:bg-whitetransition-colors duration-200 cursor-pointer">
+              <i class="fa-solid fa-plus"></i>
+            </div>
+            <p class="mt-2 text-xs font-light">Deposit</p>
+          </div>
+          <div class="flex flex-col items-center">
+            <div class="w-14 h-14 flex items-center justify-center bg-white/5 border border-white/10 rounded-xl text-white text-xl hover:bg-white/10 transition-colors duration-200 cursor-pointer">
+              <i class="fa-solid fa-minus"></i>
+            </div>
+            <p class="mt-2 text-xs font-light">Withdraw</p>
+          </div>
+          <div class="flex flex-col items-center">
+            <div class="w-14 h-14 flex items-center justify-center bg-white/5 border border-white/10 rounded-xl text-white text-xl hover:bg-white/10 transition-colors duration-200 cursor-pointer">
+              <i class="fa-solid fa-arrow-right-arrow-left"></i>
+            </div>
+            <p class="mt-2 text-xs font-light">Transfer</p>
+          </div>
+        </div>
+        <hr class="border-white/10 my-6">
+
+        <div class="bg-gradient-to-br from-cyan-700 to-cyann-900 border border-cyan-600 rounded-xl p-4 shadow-lg text-center">
+          <h3 class="text-xl font-bold mb-2">Refer a Friend, Earn Big!</h3>
+          <p class="text-sm text-green-100 mb-4">
+            Get <span class="font-bold text-cyan-200">5% of their first deposit</span>
+            when they register and fund their account.
+          </p>
+          <button class="bg-white text-black px-6 py-2 rounded-lg font-semibold hover:bg-gray-100 transition-colors duration-200">
+            Refer Now
+          </button>
+        </div>
       </div>
-    </div>
-  </div>
+      <!-- demo -->
+      <div id="demo-mode-display" class="hidden">
+        <div class="bg-white/5 border border-white/10 rounded-xl p-4 space-y-2 shadow-lg mb-6">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center space-x-2">
+                <h2 id="demo-total-balance-amount" class="text-3xl font-extrabold text-white">$10,000</h2>
+                <button onclick="alert('Demo account reset functionality would go here!')"
+                        class="text-white/70 hover:text-white transition-colors duration-200 focus:outline-none">
+                  <i class="fa-solid fa-rotate-left text-lg"></i>
+                </button>
+              </div>
+            <button id="toggle-demo-balance-eye" onclick="toggleBalance('demo')">
+              <i id="demo-balance-eye-icon" class="fa-solid fa-eye-slash text-white/70 text-lg"></i>
+            </button>
+          </div>
+          <div class="pt-1">
+            <p class="text-xs text-white/60">Available Balance: <span id="demo-available-balance-text">No Available Balance in Demo Mode</span></p>
+          </div>
+        </div>
+        <div class="bg-white/5 border border-white/10 rounded-xl p-4 text-center text-white/70">
+            <p class="text-lg font-semibold mb-2">Demo Mode Limitations</p>
+            <p class="text-sm">Deposit, Withdraw, and Transfer functionalities are disabled in Demo Mode for practice purposes. Switch to Real Mode to access them.</p>
+        </div>
+        <div class="py-6">
+            <div class="bg-gradient-to-br from-cyan-700 to-cyann-900 border border-cyan-600 rounded-xl p-4 shadow-lg text-center">
+                <h3 class="text-xl font-bold mb-2">Refer a Friend, Earn Big!</h3>
+                <p class="text-sm text-green-100 mb-4">
+                  Get <span class="font-bold text-cyan-200">5% of their first deposit</span>
+                  when they register and fund their account.
+                </p>
+                <button class="bg-white text-black px-6 py-2 rounded-lg font-semibold hover:bg-gray-100 transition-colors duration-200">
+                  Refer Now
+                </button>
+              </div>
+        </div>
+      </div>
+    </section>
 
-  <!-- Bottom Nav -->
-  <nav class="fixed bottom-0 left-0 right-0 bg-black border-t border-white/10 flex justify-around py-2 text-sm">
-    <button class="flex flex-col items-center text-white">
-      <svg class="w-5 h-5 mb-1" fill="currentColor" viewBox="0 0 24 24"><path d="M3 12l2-2m0 0l7-7 7 7M13 5v6h6m4 4h-4v6h-6v-6H5v6H1v-6H0"/></svg>
-      Hub
+
+    <!--BOTTOM NAV -->
+    <!-- MARKET TAB -->
+    <section id="tab-markets" class="tab-content hidden px-4 bg-white/5 min-h-screen">
+        <div class="max-w-md mx-auto text-center py-2">
+          
+            <div id="tradingview-markets-widget" class="w-full h-[350px] overflow-hidden mb-8"></div>  
+            
+            <div> 
+                <div class="mb-4">
+                    <label class="block text-sm mb-1 text-white/70">Stake Amount ($)</label>
+                    <div class="flex items-center space-x-2">
+                        <button onclick="adjustStake(-10)" class="px-3 py-1 bg-white/10 rounded text-lg">−</button>
+                        <input id="stake" type="number" value="10" min="10" step="10"
+                          class="w-full px-4 py-2 rounded-lg bg-white/10 border border-white/20 text-white text-center focus:outline-none focus:ring-2 focus:ring-cyan-400" />
+                        <button onclick="adjustStake(10)" class="px-3 py-1 bg-white/10 rounded text-lg">+</button> 
+                    </div>
+                </div>
+          
+                <div class="pb-6">
+                    <label class="block text-sm mb-1 text-white/70">Expires In (mins)</label>
+                    <div class="flex items-center space-x-2">
+                      <button onclick="adjustExpiration(-1)" class="px-3 py-1 bg-white/10 rounded text-lg">−</button>
+                      <input id="expiration" type="number" value="5" min="1" step="1"
+                        class="w-full px-4 py-2 rounded-lg bg-white/10 border border-white/20 text-white text-center focus:outline-none focus:ring-2 focus:ring-cyan-400" />
+                      <button onclick="adjustExpiration(1)" class="px-3 py-1 bg-white/10 rounded text-lg">+</button>
+                    </div>
+                    <p class="text-xs text-white/50 mt-1">Expires at: <span id="expiration-time"></span></p>
+                </div>
+          
+                <div class="flex justify-between space-x-4 pt-2">
+                  <button type="button" class="w-1/2 py-2 bg-white text-black font-semibold rounded-lg transition hover:bg-gray-200">Buy</button>
+                  <button type="button" class="w-1/2 py-2 bg-cyan-400 text-black font-semibold rounded-lg transition hover:bg-cyan-300">Sell</button>
+                </div>
+            </div>
+        </div>
+    </section>
+      
+
+
+    <!-- TRADE TAB -->
+    <section id="tab-trade" class="tab-content hidden px-4 py-6">
+        <div class="max-w-md mx-auto text-white space-y-6">
+          
+          <!-- Robot Summary -->
+          <div class="bg-white/5 border border-white/10 rounded-xl p-4">
+            <h2 class="text-xl font-bold">AI Auto Trader</h2>
+            <p class="text-sm text-white/60">Status: <span id="bot-status" class="text-green-400 font-semibold">Active</span></p>
+            <div class="text-sm text-white/70 flex justify-between mt-2">
+              <span>Total Trades:</span><span id="bot-trades">17</span>
+            </div>
+            <div class="text-sm text-white/70 flex justify-between">
+              <span>Win Rate:</span><span id="bot-winrate">82%</span>
+            </div>
+            <div class="text-sm text-white/70 flex justify-between">
+              <span>Profit:</span><span id="bot-profit">+$42.35</span>
+            </div>
+          </div>
+      
+          <!-- Bot Live Activity Feed -->
+          <div class="bg-white/5 border border-white/10 rounded-xl p-4 max-h-64 overflow-y-auto">
+            <h3 class="text-lg font-semibold mb-2">Recent Actions</h3>
+            <ul id="bot-log" class="text-sm text-white/80 space-y-1">
+              <li>📈 19:45 - Buy EUR/USD @ 1.14500 ($10)</li>
+              <li>📉 19:47 - Sell GBP/USD @ 1.27540 ($10)</li>
+              <li>✅ 19:49 - Closed trade with +$4.20 profit</li>
+            </ul>
+          </div>
+      
+          <!-- Control & Settings -->
+          <div class="bg-white/5 border border-white/10 rounded-xl p-4 space-y-4">
+            <h3 class="text-lg font-semibold">Control Panel</h3>
+      
+            <!-- Buttons -->
+            <div class="flex justify-between space-x-4">
+              <button id="start-bot" class="w-1/2 py-2 bg-cyan-400 hover:bg-cyan-300 text-black font-bold rounded-lg">Start Bot</button>
+              <button id="stop-bot" class="w-1/2 py-2 bg-white text-black font-bold rounded-lg hover:bg-gray-200">Stop Bot</button>
+            </div>
+      
+            <!-- Stake Amount -->
+            <div>
+              <label class="block text-sm mb-1 text-white/70">Stake Per Trade ($)</label>
+              <div class="flex items-center justify-between bg-white/10 rounded-lg px-3 py-2 border border-white/20">
+                <button onclick="adjustStake(-1)" class="text-xl px-2">−</button>
+                <span id="stake-display" class="text-lg font-semibold">$10</span>
+                <button onclick="adjustStake(1)" class="text-xl px-2">+</button>
+              </div>
+            </div>
+          </div>
+      
+          <p class="text-xs text-white/50 text-center pt-4">Bot is trading based on predefined AI strategy. You can stop anytime.</p>
+        </div>
+      </section>
+      
+
+    <!-- POSITIONS TAB -->
+    <section id="tab-positions" class="tab-content hidden px-4 py-6">
+        <div class="max-w-md mx-auto text-white space-y-6">
+      
+          <!-- Open Positions -->
+          <div class="bg-white/5 border border-white/10 rounded-xl p-4 space-y-2">
+            <h2 class="text-lg font-bold mb-1">Open Positions</h2>
+            <ul id="open-positions" class="space-y-3 text-sm text-white/80">
+              <li class="bg-white/10 rounded-lg px-4 py-3 flex justify-between items-center border border-white/10">
+                <div>
+                  <p class="font-semibold">EUR/USD</p>
+                  <p class="text-xs text-white/60">Buy • $10 @ 1.14500</p>
+                  <p class="text-xs text-white/60">Expires: 20:10</p>
+                </div>
+                <span class="text-xs bg-cyan-400 text-black px-3 py-1 rounded-lg font-bold">Running</span>
+              </li>
+              <!-- More open trades will be appended here -->
+            </ul>
+          </div>
+      
+          <!-- Closed Positions -->
+          <div class="bg-white/5 border border-white/10 rounded-xl p-4 space-y-2">
+            <h2 class="text-lg font-bold mb-1">Closed Positions</h2>
+            <ul id="closed-positions" class="space-y-3 text-sm text-white/80">
+              <li class="bg-white/10 rounded-lg px-4 py-3 flex justify-between items-center border border-white/10">
+                <div>
+                  <p class="font-semibold">GBP/USD</p>
+                  <p class="text-xs text-white/60">Sell • $20 @ 1.27540</p>
+                  <p class="text-xs text-white/60">Expired: 19:45</p>
+                </div>
+                <span class="text-xs bg-green-400 text-black px-3 py-1 rounded-lg font-bold">+ $5.40</span>
+              </li>
+              <li class="bg-white/10 rounded-lg px-4 py-3 flex justify-between items-center border border-white/10">
+                <div>
+                  <p class="font-semibold">USD/JPY</p>
+                  <p class="text-xs text-white/60">Buy • $15 @ 135.00</p>
+                  <p class="text-xs text-white/60">Expired: 19:30</p>
+                </div>
+                <span class="text-xs bg-red-400 text-white px-3 py-1 rounded-lg font-bold">− $15.00</span>
+              </li>
+              <!-- More closed trades can be added here -->
+            </ul>
+          </div>
+      
+        </div>
+      </section>
+      
+
+    <!-- ACCOUNT TAB -->
+    <section id="tab-account" class="tab-content hidden px-4 py-6">
+        <div class="max-w-md mx-auto text-white space-y-6">
+      
+          <!-- User Summary -->
+          <div class="bg-white/5 border border-white/10 rounded-xl p-4 flex items-center space-x-4">
+            <div class="w-14 h-14 rounded-full bg-white/10 flex items-center justify-center text-white text-xl font-bold border border-white/20">
+              <i class="fa-solid fa-user"></i>
+            </div>
+            <div>
+              <p class="text-lg font-bold">Test User</p>
+              <p class="text-sm text-white/70">ID: #RAVE-23094</p>
+            </div>
+          </div>
+      
+          <!-- Quick Actions -->
+          <div class="grid grid-cols-2 gap-4">
+            <button class="bg-cyan-400 text-black py-3 rounded-xl font-semibold hover:bg-cyan-300 transition">Deposit</button>
+            <button class="bg-white text-black py-3 rounded-xl font-semibold hover:bg-gray-100 transition">Withdraw</button>
+          </div>
+      
+          <!-- Account Options -->
+          <div class="bg-white/5 border border-white/10 rounded-xl p-4 divide-y divide-white/10">
+            
+            <div class="py-3 flex justify-between items-center">
+              <span class="text-white/80">Join Telegram Community</span>
+              <i class="fa-brands fa-telegram text-cyan-400 text-lg"></i>
+            </div>
+      
+            <div class="py-3 flex justify-between items-center">
+              <span class="text-white/80">Install Web App</span>
+              <i class="fa-solid fa-download text-cyan-400 text-lg"></i>
+            </div>
+      
+            <div class="py-3 flex justify-between items-center">
+              <span class="text-white/80">Edit Profile</span>
+              <i class="fa-solid fa-user-pen text-cyan-400 text-lg"></i>
+            </div>
+      
+            <div class="py-3 flex justify-between items-center">
+              <span class="text-white/80">KYC Verification</span>
+              <span class="text-xs px-2 py-1 bg-yellow-500/20 text-yellow-300 rounded-lg font-semibold">Pending</span>
+            </div>
+      
+            <div class="py-3 flex justify-between items-center">
+              <span class="text-white/80">Security Settings</span>
+              <i class="fa-solid fa-shield-halved text-cyan-400 text-lg"></i>
+            </div>
+      
+            <div class="py-3 flex justify-between items-center">
+              <span class="text-white/80">Notification Preferences</span>
+              <i class="fa-solid fa-bell text-cyan-400 text-lg"></i>
+            </div>
+      
+            <div class="py-3 flex justify-between items-center">
+              <span class="text-white/80">Contact Support</span>
+              <i class="fa-solid fa-headset text-cyan-400 text-lg"></i>
+            </div>
+      
+            <div class="py-3 flex justify-between items-center">
+              <span class="text-white/80">Terms & Policies</span>
+              <i class="fa-solid fa-file-contract text-cyan-400 text-lg"></i>
+            </div>
+      
+            <div class="py-3 flex justify-between items-center">
+              <span class="text-red-400 font-bold">Log Out</span>
+              <i class="fa-solid fa-arrow-right-from-bracket text-red-400 text-lg"></i>
+            </div>
+          </div>
+      
+          <!-- App Info -->
+          <div class="text-xs text-white/50 text-center pt-4">
+            EarnRave v1.0.0 • Last updated: Jun 2025<br>
+            Built for smart traders. Powered by AI.
+          </div>
+      
+        </div>
+      </section>      
+
+  </main>
+
+  <nav class="fixed bottom-0 left-0 right-0 border-t border-white/10 flex justify-around py-4 text-xs font-light bg-black/80 backdrop-blur-sm z-20">
+    <button id="nav-hub" onclick="showTab('tab-hub')" class="flex flex-col items-center text-white/50 w-1/5">
+        <i class="fa-solid fa-house pb-2 text-lg"></i>
+        Hub
     </button>
-    <button class="flex flex-col items-center text-white/50">
-      <svg class="w-5 h-5 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
-      Markets
+    <button id="nav-markets" onclick="showTab('tab-markets')" class="flex flex-col items-center text-white/50 w-1/5">
+        <i class="fa-solid fa-chart-simple pb-2 text-lg"></i>
+        Markets
     </button>
-    <button class="flex flex-col items-center text-white/50">
-      <svg class="w-5 h-5 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M9 19V6h13M9 6l-7 7 7 7"/></svg>
-      Trade
+    <button id="nav-trade" onclick="showTab('tab-trade')" class="flex flex-col items-center text-white/50 w-1/5">
+        <i class="fa-solid fa-arrow-trend-up pb-2 text-lg"></i>
+        Trade
     </button>
-    <button class="flex flex-col items-center text-white/50">
-      <svg class="w-5 h-5 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"/></svg>
-      Positions
+    <button id="nav-positions" onclick="showTab('tab-positions')" class="flex flex-col items-center text-white/50 w-1/5">
+        <i class="fa-solid fa-briefcase pb-2 text-lg"></i>
+        Positions
+    </button>
+    <button id="nav-account" onclick="showTab('tab-account')" class="flex flex-col items-center text-white/50 w-1/5">
+        <i class="fa-solid fa-user pb-2 text-lg"></i>
+        Account
     </button>
   </nav>
+
+  <!-- JAVASCRIPT FOR HUB -->
+<script>
+    const REAL_TOTAL_BALANCE = "$60,000";
+    const REAL_AVAILABLE_BALANCE = "$45,000";
+    const DEMO_TOTAL_BALANCE = "$10,000";
+    const HIDDEN_BALANCE_TEXT = "•••••••";
+
+    let balanceVisible = true; // State for balance visibility
+    let currentMode = 'real'; // Keep track of current mode (real/demo)
+
+    function showTab(tabId) {
+        // Hide all tab contents
+        document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+        // Show the active tab content
+        document.getElementById(tabId).classList.remove('hidden');
+
+        // Reset all navigation buttons to inactive state
+        document.querySelectorAll('nav button').forEach(btn => {
+            btn.classList.remove('text-cyan-400');
+            btn.classList.add('text-white/50');
+            btn.querySelector('i')?.classList.remove('text-cyan-400');
+        });
+
+        // Set active navigation button to active state
+        const activeBtn = document.getElementById(`nav-${tabId.replace('tab-', '')}`);
+        if (activeBtn) {
+            activeBtn.classList.remove('text-white/50');
+            activeBtn.classList.add('text-cyan-400');
+            activeBtn.querySelector('i')?.classList.add('text-cyan-400');
+        }
+
+        // When switching back to hub, ensure correct mode is displayed
+        if (tabId === 'tab-hub') {
+            toggleMode(currentMode); // Re-apply current mode display logic
+        }
+    }
+
+    function toggleMode(mode) {
+        currentMode = mode; // Update current mode state
+
+        const realModeDisplay = document.getElementById('real-mode-display');
+        const demoModeDisplay = document.getElementById('demo-mode-display');
+        const demoBtn = document.getElementById('demo-btn');
+        const realBtn = document.getElementById('real-btn');
+
+        // Update mode toggle buttons visual state
+        demoBtn.classList.remove('bg-white/20', 'text-white', 'text-white/70');
+        realBtn.classList.remove('bg-white/20', 'text-white', 'text-white/70');
+
+        if (mode === 'demo') {
+            demoModeDisplay.classList.remove('hidden');
+            realModeDisplay.classList.add('hidden');
+            demoBtn.classList.add('bg-white/20', 'text-white');
+            realBtn.classList.add('text-white/70');
+        } else { // mode === 'real'
+            demoModeDisplay.classList.add('hidden');
+            realModeDisplay.classList.remove('hidden');
+            realBtn.classList.add('bg-white/20', 'text-white');
+            demoBtn.classList.add('text-white/70');
+        }
+
+        // Reset balance visibility for the newly active mode
+        balanceVisible = true;
+        updateBalanceDisplay();
+    }
+
+    function updateBalanceDisplay() {
+        // Real Mode Elements
+        const realTotalBalanceElement = document.getElementById('real-balance-amount');
+        const realAvailableBalanceElement = document.getElementById('real-available-balance');
+        const realBalanceEyeIcon = document.getElementById('real-balance-eye-icon');
+
+        // Demo Mode Elements
+        const demoTotalBalanceElement = document.getElementById('demo-total-balance-amount');
+        const demoAvailableBalanceText = document.getElementById('demo-available-balance-text');
+        const demoBalanceEyeIcon = document.getElementById('demo-balance-eye-icon');
+
+        if (currentMode === 'real') {
+            if (balanceVisible) {
+                realTotalBalanceElement.textContent = REAL_TOTAL_BALANCE;
+                realAvailableBalanceElement.textContent = REAL_AVAILABLE_BALANCE;
+                realBalanceEyeIcon.className = "fa-solid fa-eye-slash text-white/70 text-lg";
+            } else {
+                realTotalBalanceElement.textContent = HIDDEN_BALANCE_TEXT;
+                realAvailableBalanceElement.textContent = HIDDEN_BALANCE_TEXT;
+                realBalanceEyeIcon.className = "fa-solid fa-eye text-white/70 text-lg";
+            }
+        } else { // currentMode === 'demo'
+            if (balanceVisible) {
+                demoTotalBalanceElement.textContent = DEMO_TOTAL_BALANCE;
+                demoAvailableBalanceText.textContent = "No Available Balance in Demo Mode"; // Explicit text
+                demoBalanceEyeIcon.className = "fa-solid fa-eye-slash text-white/70 text-lg";
+            } else {
+                demoTotalBalanceElement.textContent = HIDDEN_BALANCE_TEXT;
+                demoAvailableBalanceText.textContent = HIDDEN_BALANCE_TEXT; // Hide available balance text too
+                demoBalanceEyeIcon.className = "fa-solid fa-eye text-white/70 text-lg";
+            }
+        }
+    }
+
+    // Pass the mode type to toggleBalance to know which elements to update
+    function toggleBalance(mode) {
+        balanceVisible = !balanceVisible;
+        updateBalanceDisplay(); // Call the unified update function
+    }
+
+    // Initial load logic
+    window.addEventListener('DOMContentLoaded', () => {
+        showTab('tab-hub'); // Ensure Hub is selected on load
+        toggleMode('real'); // Default to real mode and apply styles/balances
+    });
+</script>
+
+
+<!-- JAVASCRIPT FOR MARKETS -->
+ <script>
+    // Logic for Trading on Markets Tab
+let stakeAmount; // Will be set from input on initial updateDisplays()
+let expirationInMinutes; // Will be set from input on initial updateDisplays()
+let expirationTime = new Date(); // This will be calculated based on expirationInMinutes
+
+function updateDisplays() {
+  // Update stake input value
+  const stakeInput = document.getElementById("stake");
+  if (stakeInput) {
+    // Ensure stakeAmount variable is synced with input field's current value
+    stakeAmount = parseInt(stakeInput.value);
+  }
+
+  // Update expiration input value and calculated time
+  const expirationInput = document.getElementById("expiration");
+  const expirationTimeSpan = document.getElementById("expiration-time");
+  if (expirationInput && expirationTimeSpan) {
+    expirationInMinutes = parseInt(expirationInput.value);
+    
+    // Calculate expiration time from current time + expirationInMinutes
+    let now = new Date();
+    expirationTime = new Date(now.getTime() + expirationInMinutes * 60 * 1000);
+    
+
+    const h = expirationTime.getHours().toString().padStart(2, '0');
+    const m = expirationTime.getMinutes().toString().padStart(2, '0');
+    expirationTimeSpan.textContent = `${h}:${m}`;
+  }
+}
+
+function adjustStake(amount) {
+  const stakeInput = document.getElementById("stake");
+  if (stakeInput) {
+    let currentStake = parseInt(stakeInput.value);
+    let newStake = currentStake + amount;
+
+    // Ensure stake doesn't go below a minimum (e.g., 10)
+    // You had 100 before, but your HTML default is 10. Let's use 10 as minimum.
+    if (newStake < 10) { // Assuming 10 is the minimum
+      newStake = 10;
+    }
+
+    stakeInput.value = newStake; // Update the input field directly
+    updateDisplays(); // Call to sync variable and update any other displays
+  }
+}
+
+function adjustExpiration(mins) { // Renamed from adjustTime
+  const expirationInput = document.getElementById("expiration");
+  if (expirationInput) {
+    let currentExpiration = parseInt(expirationInput.value);
+    let newExpiration = currentExpiration + mins;
+
+    // Ensure expiration time doesn't go below a minimum (e.g., 1 minute)
+    if (newExpiration < 1) { // Assuming 1 minute is the minimum
+      newExpiration = 1;
+    }
+
+    expirationInput.value = newExpiration; // Update the input field directly
+    updateDisplays(); // Call to sync variable and update time display
+  }
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+  updateDisplays(); // Call once on load to set initial values and displays
+});
+ </script>
+
+ <!-- JAVASCRIPT FOR TRADE -->
+ <script>
+    let botActive = true;
+    let stake = 10;
+  
+    function adjustStake(change) {
+      stake = Math.max(1, stake + change);
+      document.getElementById("stake-display").textContent = `$${stake}`;
+    }
+  
+    document.getElementById("start-bot").addEventListener("click", () => {
+      botActive = true;
+      document.getElementById("bot-status").textContent = "Active";
+      document.getElementById("bot-status").className = "text-green-400 font-semibold";
+    });
+  
+    document.getElementById("stop-bot").addEventListener("click", () => {
+      botActive = false;
+      document.getElementById("bot-status").textContent = "Paused";
+      document.getElementById("bot-status").className = "text-yellow-400 font-semibold";
+    });
+  
+    // Optional: Add fake log entry dynamically
+    function addBotLog(message) {
+      const li = document.createElement("li");
+      li.textContent = message;
+      document.getElementById("bot-log").prepend(li);
+    }
+  </script>
+  
+
+
+<!-- JAVASCRIPT FOR TRADINGVIEW -->
+<script type="text/javascript" src="https://s3.tradingview.com/tv.js"></script>
+<script>
+  function loadMarketsChart() {
+    const tvWidget = new TradingView.widget({
+      container_id: "tradingview-markets-widget",
+      width: "100%",
+      height: 350, // Adjust height as needed
+      symbol: "EURUSD", // Automatically set to EURUSD (default asset)
+      interval: "1", // Automatically set to 1m
+      timezone: "Africa/Lagos", // Set timezone to WAT (Africa/Lagos)
+      theme: "dark",
+      style: "1", // Candle style (default chart type)
+      locale: "en",
+
+
+      hide_side_toolbar: true, // Keep side toolbar hidden for drawing tools etc.
+      hide_legend: true, // Keep legend hidden for symbol/price in top-left chart area
+      hide_volume: true, // Explicitly hide volume
+
+      // 2. Allow symbol change (needed for the native symbol selector)
+      allow_symbol_change: true, // Must be true for the native symbol search to work
+
+      withdateranges: false,
+      details: false,
+      hotlist: false,
+      studies: [], // Keep empty to prevent default indicators
+
+      // --- Modified disabled_features ---
+      disabled_features: [
+        "volume_force_overlay",
+        "show_volume_overlay",
+        "header_compare",         // Keep hidden (Compare button)
+        "header_indicators",      // Keep hidden (Indicators button)
+        "study_templates",        // Keep hidden
+        "left_toolbar",           // Keep hidden (Drawing tools)
+        "control_bar",            // Keep hidden (Bottom control bar, replay)
+        // "timeframes_toolbar",    // REMOVED - This feature now enabled to show timeframes
+        "context_menus",
+        "pane_context_menu",
+        "create_indicator_button", // Keep hidden (Create new indicator button)
+        // "header_widget",         // REMOVED - This feature now enabled to show symbol picker
+        "border_around_the_chart",
+        "main_series_properties",
+        "show_owned_styles_button",
+        "save_chart_properties_to_localstorage",
+        "popup_hints",
+        "header_screenshot",      // Keep hidden
+        "header_settings",        // Keep hidden
+        "header_undo_redo",       // Keep hidden
+        "header_interval_dialog_button", // Keep hidden (the custom time interval dialog)
+        "show_popup_button",      // Keep hidden (pop out chart button)
+        "main_series_scale_menu", // Keep hidden (log scale, percent scale menu)
+        "datasource_select_dropdown", // Keep hidden
+        "display_market_status",  // Keep hidden
+        "symbol_search_hot_key",  // Keep hidden (prevent Ctrl+S or Cmd+S for symbol search)
+        // Explicitly enable chart type selector if it's not automatically visible with header_widget
+        // "header_chart_type_select" is not a standard disabled_feature name,
+        // it's usually part of the general header elements.
+      ],
+      // Prevents data associated with volume
+      data_features: [
+          "volume_widget_config"
+      ],
+      overrides: {
+        "volumePaneSize": "0", // Set volume pane size to 0
+        "mainSeriesProperties.showVolume": false, // Explicitly hide volume on the main series
+
+        // Candle Colors: White for Up, Cyan-400 for Down (as requested)
+        "mainSeriesProperties.candleStyle.upColor": "#FFFFFF", // White for up candles
+        "mainSeriesProperties.candleStyle.downColor": "#22d3ee", // Cyan-400 for down candles
+        "mainSeriesProperties.candleStyle.borderUpColor": "#FFFFFF",
+        "mainSeriesProperties.candleStyle.borderDownColor": "#22d3ee",
+        "mainSeriesProperties.candleStyle.wickUpColor": "#FFFFFF",
+        "mainSeriesProperties.candleStyle.wickDownColor": "#22d3ee",
+
+        // Background and Grid Colors (maintained for dark theme)
+        "paneProperties.background": "#1A1D20", // Dark background color
+        "paneProperties.vertGridProperties.color": "#2C2F33", // Subtle grid for vertical
+        "paneProperties.horzGridProperties.color": "#2C2F33", // Subtle grid for horizontal
+        "scalesProperties.textColor": "#A7A9AC", // Text color for scales (numbers)
+        "timeScale.backgroundColor": "#1A1D20", // Match bottom time scale background
+        "timeScale.textColor": "#A7A9AC", // Match time scale text color
+        "paneProperties.legendProperties.showSeriesTitle": false,
+        "paneProperties.legendProperties.showStudyTitles": false,
+      },
+      // Limit available timeframes to max 30 minutes
+      // This is a list of resolutions that are available in the interval dropdown.
+      interval_dialog_options: {
+          "intervals": ["1", "5", "15", "30"],
+      },
+    });
+
+    tvWidget.onChartReady(() => {
+      // Fallback for volume removal (should be redundant with disabled_features but good for robustness)
+      tvWidget.chart().getAllStudies().forEach(study => {
+        if (study.name.toLowerCase().includes("volume")) {
+          console.log("Removing volume study (fallback):", study.name);
+          tvWidget.chart().removeEntity(study.id);
+        }
+      });
+      // Optionally, if you want to initially set a specific chart type or symbol after load, you can do it here:
+      // tvWidget.chart().setChartType(1); // 1 for candles, 2 for bars, 3 for line
+      // tvWidget.chart().setSymbol("EURUSD");
+    });
+  }
+
+  document.addEventListener("DOMContentLoaded", () => {
+    document.getElementById("nav-markets").addEventListener("click", () => {
+      const widgetContainer = document.getElementById("tradingview-markets-widget");
+      // Load chart only if the container exists and is empty
+      if (widgetContainer && !widgetContainer.hasChildNodes()) {
+        loadMarketsChart();
+      }
+    });
+  });
+</script>
 
 </body>
 </html>

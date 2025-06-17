@@ -14,3 +14,8 @@
     animation: gradient-slow 20s ease infinite;
   }
   
+
+  #tradingview-markets-widget iframe {
+    height: 100% !important;
+  }
+  
