@@ -85,7 +85,7 @@
       e.preventDefault();
       const otp = document.getElementById('otpInput').value;
 
-      const res = await fetch('https://earnrave-backend.com/verify', {
+      const res = await fetch('https://earnrave-backend-0c5eddaec35e.com/verify', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, otp }),
@@ -122,7 +122,7 @@
 
     async function resendOtp() {
       startCountdown(60);
-      const res = await fetch('https://earnrave-backend.com/request-reset', {
+      const res = await fetch('https://earnrave-backend-0c5eddaec35e/request-reset', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email }),
