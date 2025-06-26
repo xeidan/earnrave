@@ -481,7 +481,7 @@
   
   
   <script>
-    const backendUrl = 'https://earnrave-backend.herokuapp.com'; // your actual backend URL
+    const backendUrl = 'https://earnrave-backend-0c5eddaec35e.herokuapp.com';
   
     // === Back to Top Button Logic ===
     const backToTopBtn = document.getElementById('backToTopBtn');
@@ -506,7 +506,6 @@
     // === FAQ Accordion Logic ===
     document.addEventListener('DOMContentLoaded', () => {
       const faqButtons = document.querySelectorAll('.backdrop-blur-md button');
-  
       faqButtons.forEach(button => {
         button.addEventListener('click', () => {
           const answer = button.nextElementSibling;
@@ -518,11 +517,11 @@
             button.setAttribute('aria-expanded', 'false');
             icon.classList.remove('rotate-180');
           } else {
-            faqButtons.forEach(otherButton => {
-              if (otherButton !== button && otherButton.getAttribute('aria-expanded') === 'true') {
-                otherButton.nextElementSibling.style.maxHeight = '0';
-                otherButton.setAttribute('aria-expanded', 'false');
-                otherButton.querySelector('svg').classList.remove('rotate-180');
+            faqButtons.forEach(otherBtn => {
+              if (otherBtn !== button && otherBtn.getAttribute('aria-expanded') === 'true') {
+                otherBtn.nextElementSibling.style.maxHeight = '0';
+                otherBtn.setAttribute('aria-expanded', 'false');
+                otherBtn.querySelector('svg').classList.remove('rotate-180');
               }
             });
             answer.style.maxHeight = answer.scrollHeight + 'px';
@@ -545,10 +544,9 @@
       });
     });
   
-    // === Scroll Animation Logic ===
+    // === Scroll Animation ===
     document.addEventListener("DOMContentLoaded", () => {
       const animatedElements = document.querySelectorAll('[data-animate]');
-  
       const observer = new IntersectionObserver((entries, observer) => {
         entries.forEach(entry => {
           if (entry.isIntersecting) {
@@ -561,12 +559,10 @@
         });
       }, { threshold: 0.1 });
   
-      animatedElements.forEach(element => {
-        observer.observe(element);
-      });
+      animatedElements.forEach(el => observer.observe(el));
     });
   
-    // === Auth Panel Logic ===
+    // === Auth Modal Logic ===
     const authBackdrop = document.getElementById('authBackdrop');
     const authModal = document.getElementById('authModal');
     const tabSlider = document.getElementById('tabSlider');
@@ -611,9 +607,8 @@
     // === Register Logic ===
     document.getElementById('registerForm').addEventListener('submit', async function (e) {
       e.preventDefault();
-      const inputs = e.target.querySelectorAll('input');
-      const email = inputs[0].value;
-      const password = inputs[1].value;
+      const email = document.querySelector('#registerForm input[type="email"]').value;
+      const password = document.querySelector('#registerForm input[type="password"]').value;
       const referralCode = generateReferralCode();
       const referredBy = getReferralFromURL();
   
@@ -640,9 +635,8 @@
     // === Login Logic ===
     document.getElementById('loginForm').addEventListener('submit', async function (e) {
       e.preventDefault();
-      const inputs = e.target.querySelectorAll('input');
-      const email = inputs[0].value;
-      const password = inputs[1].value;
+      const email = document.querySelector('#loginForm input[type="email"]').value;
+      const password = document.querySelector('#loginForm input[type="password"]').value;
   
       try {
         const res = await fetch(`${backendUrl}/login`, {
@@ -665,19 +659,6 @@
       }
     });
   
-    // === Register Logic ===
-    fetch('https://earnrave-backend-0c5eddaec35e.herokuapp.com/signup', {
-  method: 'POST',
-  headers: { 'Content-Type': 'application/json' },
-  body: JSON.stringify({
-    email,
-    password,
-    referral_code: referralCode,
-    referred_by: referredBy,
-  }),
-});
-
-
     // === Helpers ===
     function generateReferralCode() {
       return 'RAVE' + Math.floor(Math.random() * 1000000);
@@ -687,6 +668,7 @@
       const params = new URLSearchParams(window.location.search);
       return params.get('ref') || '';
     }
-  </script>  
+  </script>
+    
 </body>
 </html>
