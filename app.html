@@ -376,6 +376,71 @@
     </button>
   </nav>
 
+  <!-- GENERAL JAVASCRIPT -->
+   <script>
+    res.json({
+  token,
+  user: {
+    id: user.id,
+    email: user.email,
+    rave_id: user.rave_id,
+    reward_balance: user.reward_balance,
+    // any other fields you want (e.g. name, total_balance, etc.)
+  }
+});
+
+
+document.addEventListener("DOMContentLoaded", async () => {
+  const user = JSON.parse(localStorage.getItem("user"));
+  const token = localStorage.getItem("token");
+
+  if (!user || !token) {
+    window.location.href = 'index.html'; // not logged in
+    return;
+  }
+
+  // Populate data
+  document.querySelector('#user-greeting span').textContent = user.email;
+  document.querySelector('#user-info-summary').innerHTML = `
+    <p class="text-lg font-bold">ID: <span class="text-white/70">#${user.rave_id}</span></p>
+    <p class="text-sm text-white/70">Balance: <span id="summary-balance">$${user.reward_balance.toFixed(2)}</span></p>
+  `;
+
+  // For Real Balances
+  document.getElementById('real-balance-amount').textContent = `$${user.reward_balance.toFixed(2)}`;
+  document.getElementById('real-available-balance').textContent = `$${(user.reward_balance * 0.75).toFixed(2)}`; // example: 75% available
+});
+
+
+app.get('/me', async (req, res) => {
+  const authHeader = req.headers.authorization;
+  if (!authHeader) return res.sendStatus(401);
+
+  const token = authHeader.split(' ')[1];
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const result = await pool.query('SELECT * FROM users WHERE id = $1', [decoded.id]);
+    if (result.rows.length === 0) return res.sendStatus(404);
+    const user = result.rows[0];
+    res.json({
+      id: user.id,
+      email: user.email,
+      rave_id: user.rave_id,
+      reward_balance: user.reward_balance
+    });
+  } catch (err) {
+    res.status(401).json({ message: 'Invalid token' });
+  }
+});
+
+
+const res = await fetch('https://earnrave-backend.com/me', {
+  headers: { 'Authorization': 'Bearer ' + token }
+});
+const user = await res.json();
+
+   </script>
+
   <!-- JAVASCRIPT FOR HUB -->
 <script>
     const REAL_TOTAL_BALANCE = "$60,000";

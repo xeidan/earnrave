@@ -93,8 +93,8 @@
     </div>
     
     <div class="text-center mt-12">
-      <button class="px-4 py-2 rounded-md bg-white/10 hover:bg-white/20 transition border border-white/30">
-          Start Trading
+      <button type="button" onclick="toggleAuthPanel()" class="px-4 py-2 rounded-md bg-white/10 hover:bg-white/20 transition border border-white/30">
+        Start Trading
       </button>
     </div>
   </section>
@@ -480,9 +480,10 @@
   </div>
   
   
-
   <script>
-    // Back to Top Button Logic
+    const backendUrl = 'https://earnrave-backend.herokuapp.com'; // your actual backend URL
+  
+    // === Back to Top Button Logic ===
     const backToTopBtn = document.getElementById('backToTopBtn');
     let hideTimeout;
   
@@ -492,7 +493,7 @@
         clearTimeout(hideTimeout);
         hideTimeout = setTimeout(() => {
           backToTopBtn.classList.add('hidden');
-        }, 3000); // hide after 3 seconds of inactivity
+        }, 3000);
       } else {
         backToTopBtn.classList.add('hidden');
       }
@@ -502,125 +503,190 @@
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
   
-    // FAQ Accordion Logic
+    // === FAQ Accordion Logic ===
     document.addEventListener('DOMContentLoaded', () => {
-        const faqButtons = document.querySelectorAll('.backdrop-blur-md button');
-    
-        faqButtons.forEach(button => {
-          button.addEventListener('click', () => {
-            const answer = button.nextElementSibling;
-            const isExpanded = button.getAttribute('aria-expanded') === 'true';
-            const icon = button.querySelector('svg');
-    
-            if (isExpanded) {
-              answer.style.maxHeight = '0';
-              button.setAttribute('aria-expanded', 'false');
-              icon.classList.remove('rotate-180');
-            } else {
-              faqButtons.forEach(otherButton => {
-                if (otherButton !== button && otherButton.getAttribute('aria-expanded') === 'true') {
-                  otherButton.nextElementSibling.style.maxHeight = '0';
-                  otherButton.setAttribute('aria-expanded', 'false');
-                  otherButton.querySelector('svg').classList.remove('rotate-180');
-                }
-              });
-              answer.style.maxHeight = answer.scrollHeight + 'px';
-              button.setAttribute('aria-expanded', 'true');
-              icon.classList.add('rotate-180');
-            }
-          });
-        });
-      });
+      const faqButtons = document.querySelectorAll('.backdrop-blur-md button');
   
-      // Star Rating Logic
-      document.addEventListener("DOMContentLoaded", () => {
-        document.querySelectorAll(".star-row").forEach(container => {
-          for (let i = 0; i < 5; i++) {
-            container.innerHTML += `
-              <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-white/70" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M12 .587l3.668 7.431 8.2 1.193-5.934 5.787 1.4 8.168L12 18.896l-7.334 3.87 1.4-8.168L.132 9.211l8.2-1.193z"/>
-              </svg>`;
+      faqButtons.forEach(button => {
+        button.addEventListener('click', () => {
+          const answer = button.nextElementSibling;
+          const isExpanded = button.getAttribute('aria-expanded') === 'true';
+          const icon = button.querySelector('svg');
+  
+          if (isExpanded) {
+            answer.style.maxHeight = '0';
+            button.setAttribute('aria-expanded', 'false');
+            icon.classList.remove('rotate-180');
+          } else {
+            faqButtons.forEach(otherButton => {
+              if (otherButton !== button && otherButton.getAttribute('aria-expanded') === 'true') {
+                otherButton.nextElementSibling.style.maxHeight = '0';
+                otherButton.setAttribute('aria-expanded', 'false');
+                otherButton.querySelector('svg').classList.remove('rotate-180');
+              }
+            });
+            answer.style.maxHeight = answer.scrollHeight + 'px';
+            button.setAttribute('aria-expanded', 'true');
+            icon.classList.add('rotate-180');
           }
         });
       });
+    });
   
-      // Intersection Observer for Scroll Animations
-      document.addEventListener("DOMContentLoaded", () => {
-        const animatedElements = document.querySelectorAll('[data-animate]');
-  
-        const observer = new IntersectionObserver((entries, observer) => {
-          entries.forEach(entry => {
-            if (entry.isIntersecting) {
-              const delay = parseInt(entry.target.dataset.delay) || 0;
-              setTimeout(() => {
-                entry.target.classList.add('animate-visible');
-              }, delay);
-              observer.unobserve(entry.target); // Stop observing once animated
-            }
-          });
-        }, {
-          root: null, // viewport
-          threshold: 0.1 // Trigger when 10% of the element is visible
-        });
-  
-        animatedElements.forEach(element => {
-          observer.observe(element);
-        });
+    // === Star Rating Logic ===
+    document.addEventListener("DOMContentLoaded", () => {
+      document.querySelectorAll(".star-row").forEach(container => {
+        for (let i = 0; i < 5; i++) {
+          container.innerHTML += `
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-white/70" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M12 .587l3.668 7.431 8.2 1.193-5.934 5.787 1.4 8.168L12 18.896l-7.334 3.87 1.4-8.168L.132 9.211l8.2-1.193z"/>
+            </svg>`;
+        }
       });
+    });
   
+    // === Scroll Animation Logic ===
+    document.addEventListener("DOMContentLoaded", () => {
+      const animatedElements = document.querySelectorAll('[data-animate]');
   
-      // signin/signup
-      const authBackdrop = document.getElementById('authBackdrop');
-  const authModal = document.getElementById('authModal');
-  const tabSlider = document.getElementById('tabSlider');
-
-  function toggleAuthPanel() {
-  const isHidden = authBackdrop.classList.contains('hidden');
-
-  if (isHidden) {
-    // OPEN with animation
-    authBackdrop.classList.remove('hidden');
-    setTimeout(() => {
-      authModal.classList.remove('translate-y-10', 'opacity-0', 'scale-95');
-      authModal.classList.add('translate-y-0', 'opacity-100', 'scale-100');
-    }, 50);
-  } else {
-    // CLOSE immediately, no animation
-    authModal.classList.remove('translate-y-0', 'opacity-100', 'scale-100');
-    authModal.classList.add('translate-y-10', 'opacity-0', 'scale-95');
-    authBackdrop.classList.add('hidden'); // ← no timeout
-  }
-}
-
-
-  function closeOnBackdrop(e) {
-    // Close only if clicking directly on the backdrop (not inside the modal)
-    if (e.target.id === 'authBackdrop') {
-      toggleAuthPanel();
+      const observer = new IntersectionObserver((entries, observer) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            const delay = parseInt(entry.target.dataset.delay) || 0;
+            setTimeout(() => {
+              entry.target.classList.add('animate-visible');
+            }, delay);
+            observer.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.1 });
+  
+      animatedElements.forEach(element => {
+        observer.observe(element);
+      });
+    });
+  
+    // === Auth Panel Logic ===
+    const authBackdrop = document.getElementById('authBackdrop');
+    const authModal = document.getElementById('authModal');
+    const tabSlider = document.getElementById('tabSlider');
+  
+    function toggleAuthPanel() {
+      const isHidden = authBackdrop.classList.contains('hidden');
+      if (isHidden) {
+        authBackdrop.classList.remove('hidden');
+        setTimeout(() => {
+          authModal.classList.remove('translate-y-10', 'opacity-0', 'scale-95');
+          authModal.classList.add('translate-y-0', 'opacity-100', 'scale-100');
+        }, 50);
+      } else {
+        authModal.classList.remove('translate-y-0', 'opacity-100', 'scale-100');
+        authModal.classList.add('translate-y-10', 'opacity-0', 'scale-95');
+        authBackdrop.classList.add('hidden');
+      }
     }
-  }
+  
+    function closeOnBackdrop(e) {
+      if (e.target.id === 'authBackdrop') toggleAuthPanel();
+    }
+  
+    function showRegister() {
+      document.getElementById('registerForm').classList.remove('hidden');
+      document.getElementById('loginForm').classList.add('hidden');
+      document.getElementById('tabRegister').classList.add('text-white');
+      document.getElementById('tabLogin').classList.remove('text-white');
+      document.getElementById('tabLogin').classList.add('text-gray-400');
+      tabSlider.style.left = '0%';
+    }
+  
+    function showLogin() {
+      document.getElementById('registerForm').classList.add('hidden');
+      document.getElementById('loginForm').classList.remove('hidden');
+      document.getElementById('tabLogin').classList.add('text-white');
+      document.getElementById('tabRegister').classList.remove('text-white');
+      document.getElementById('tabRegister').classList.add('text-gray-400');
+      tabSlider.style.left = '50%';
+    }
+  
+    // === Register Logic ===
+    document.getElementById('registerForm').addEventListener('submit', async function (e) {
+      e.preventDefault();
+      const inputs = e.target.querySelectorAll('input');
+      const email = inputs[0].value;
+      const password = inputs[1].value;
+      const referralCode = generateReferralCode();
+      const referredBy = getReferralFromURL();
+  
+      try {
+        const res = await fetch(`${backendUrl}/signup`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, password, referral_code: referralCode, referred_by: referredBy }),
+        });
+        const data = await res.json();
+  
+        if (res.ok) {
+          localStorage.setItem('email', email);
+          alert("Signup successful! Check your email.");
+          window.location.href = 'otp.html';
+        } else {
+          alert(data.message || "Signup failed");
+        }
+      } catch (err) {
+        alert("Signup error: " + err.message);
+      }
+    });
+  
+    // === Login Logic ===
+    document.getElementById('loginForm').addEventListener('submit', async function (e) {
+      e.preventDefault();
+      const inputs = e.target.querySelectorAll('input');
+      const email = inputs[0].value;
+      const password = inputs[1].value;
+  
+      try {
+        const res = await fetch(`${backendUrl}/login`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, password }),
+        });
+  
+        const data = await res.json();
+  
+        if (res.ok) {
+          localStorage.setItem('token', data.token);
+          alert("Login successful!");
+          window.location.href = 'app.html';
+        } else {
+          alert(data.message || "Login failed");
+        }
+      } catch (err) {
+        alert("Login error: " + err.message);
+      }
+    });
+  
+    // === Register Logic ===
+    fetch('https://earnrave-backend-0c5eddaec35e.herokuapp.com/signup', {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({
+    email,
+    password,
+    referral_code: referralCode,
+    referred_by: referredBy,
+  }),
+});
 
-  function showRegister() {
-    document.getElementById('registerForm').classList.remove('hidden');
-    document.getElementById('loginForm').classList.add('hidden');
 
-    document.getElementById('tabRegister').classList.add('text-white');
-    document.getElementById('tabLogin').classList.remove('text-white');
-    document.getElementById('tabLogin').classList.add('text-gray-400');
-
-    tabSlider.style.left = '0%';
-  }
-
-  function showLogin() {
-    document.getElementById('registerForm').classList.add('hidden');
-    document.getElementById('loginForm').classList.remove('hidden');
-
-    document.getElementById('tabLogin').classList.add('text-white');
-    document.getElementById('tabRegister').classList.remove('text-white');
-    document.getElementById('tabRegister').classList.add('text-gray-400');
-
-    tabSlider.style.left = '50%';
-  }
-  </script>
+    // === Helpers ===
+    function generateReferralCode() {
+      return 'RAVE' + Math.floor(Math.random() * 1000000);
+    }
+  
+    function getReferralFromURL() {
+      const params = new URLSearchParams(window.location.search);
+      return params.get('ref') || '';
+    }
+  </script>  
 </body>
 </html>
