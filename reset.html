@@ -5,16 +5,15 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Reset Password</title>
   <link href="output.css" rel="stylesheet" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" integrity="sha512-YWxX70G/kYy1wz4g9j7kP/6L4J5jF5iV+K/jR/h/n/d/j/o/l/p/q/r/s/t/u/v/w/x/y/z" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
   <style>
-    /* Toast styling as provided, which looks good and matches the gradient */
     #toast {
       position: fixed;
       bottom: 20px;
       left: 50%;
       transform: translateX(-50%);
-      background-color: #00FFFF; /* Matches the gradient start */
-      color: #000; /* Black text for contrast */
+      background-color: #00FFFF;
+      color: #000;
       padding: 12px 20px;
       border-radius: 8px;
       font-size: 14px;
@@ -23,7 +22,7 @@
       pointer-events: none;
       transition: opacity 0.3s ease;
       z-index: 1000;
-      box-shadow: 0 4px 10px rgba(0, 255, 255, 0.3); /* Subtle glow */
+      box-shadow: 0 4px 10px rgba(0, 255, 255, 0.3);
     }
     #toast.show {
       opacity: 1;
@@ -64,17 +63,14 @@
   <div id="toast"></div>
 
   <script>
-    // Toggle password visibility function (reused from index.html)
     function togglePassword(id, icon) {
       const input = document.getElementById(id);
       if (input.type === 'password') {
         input.type = 'text';
-        icon.classList.remove('fa-eye-slash');
-        icon.classList.add('fa-eye');
+        icon.classList.replace('fa-eye-slash', 'fa-eye');
       } else {
         input.type = 'password';
-        icon.classList.remove('fa-eye');
-        icon.classList.add('fa-eye-slash');
+        icon.classList.replace('fa-eye', 'fa-eye-slash');
       }
     }
 
