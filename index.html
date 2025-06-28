@@ -760,9 +760,9 @@ async function forgotPassword() {
     const data = await res.json();
 
     if (res.ok) {
-      alert("Password reset OTP sent. Check your email.");
-      // optionally redirect to a reset page:
-      // window.location.href = 'reset.html';
+      localStorage.setItem('email', email);
+      alert("OTP sent to your email. Redirecting to reset...");
+      window.location.href = 'reset.html';
     } else {
       alert(data.message || "Could not send reset OTP.");
     }
@@ -770,6 +770,7 @@ async function forgotPassword() {
     alert("Error: " + err.message);
   }
 }
+
 
 function togglePassword(inputId, icon) {
   const input = document.getElementById(inputId);

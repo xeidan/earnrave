@@ -72,7 +72,6 @@
       setTimeout(() => window.location.href = 'index.html', 1500);
     }
 
-    // Show toast message
     function showToast(message) {
       const toast = document.getElementById('toast');
       toast.textContent = message;
@@ -80,29 +79,36 @@
       setTimeout(() => toast.classList.remove('show'), 3000);
     }
 
-    // Handle OTP verification
     document.getElementById('verifyOtpForm').addEventListener('submit', async function (e) {
       e.preventDefault();
-      const otp = document.getElementById('otpInput').value;
+      const otp = document.getElementById('otpInput').value.trim();
 
-      const res = await fetch('https://earnrave-backend-0c5eddaec35e.com/verify', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, otp }),
-      });
+      if (!/^\d{6}$/.test(otp)) {
+        showToast("Enter a valid 6-digit OTP.");
+        return;
+      }
 
-      const data = await res.json();
+      try {
+        const res = await fetch('https://earnrave-backend-0c5eddaec35e.herokuapp.com/verify', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, otp }),
+        });
 
-      if (res.ok) {
-        showToast("OTP verified successfully!");
-        localStorage.removeItem('email');
-        setTimeout(() => window.location.href = 'app.html', 1500);
-      } else {
-        showToast(data.message || "Invalid OTP.");
+        const data = await res.json();
+
+        if (res.ok) {
+          showToast("OTP verified successfully!");
+          localStorage.removeItem('email');
+          setTimeout(() => window.location.href = 'app.html', 1500);
+        } else {
+          showToast(data.message || "Invalid OTP.");
+        }
+      } catch (err) {
+        showToast("Verification error: " + err.message);
       }
     });
 
-    // Handle resend with 60s cooldown
     function startCountdown(seconds) {
       const resendBtn = document.getElementById('resendBtn');
       const resendText = document.getElementById('resendText');
@@ -122,14 +128,17 @@
 
     async function resendOtp() {
       startCountdown(60);
-      const res = await fetch('https://earnrave-backend-0c5eddaec35e/request-reset', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email }),
-      });
-
-      const data = await res.json();
-      showToast(data.message || "OTP resent via email.");
+      try {
+        const res = await fetch('https://earnrave-backend-0c5eddaec35e.herokuapp.com/request-reset', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email }),
+        });
+        const data = await res.json();
+        showToast(data.message || "OTP resent via email.");
+      } catch (err) {
+        showToast("Error resending OTP: " + err.message);
+      }
     }
 
     document.addEventListener('DOMContentLoaded', () => {
