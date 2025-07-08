@@ -422,7 +422,7 @@
           <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="w-5 h-5 text-white/80" viewBox="0 0 24 24">
             <path d="M19.6 3H4.4C3.63 3 3 3.63 3 4.4v15.2C3 20.37 3.63 21 4.4 21h15.2c.77 0 1.4-.63 1.4-1.4V4.4c0-.77-.63-1.4-1.4-1.4zM17.88 17H15l-3.1-4.14L8.52 17H6l4.32-5.52L6.4 7h3.06l2.86 3.7L15.34 7h2.9l-4.26 5.24L17.88 17z"/>
           </svg>
-        </a>
+        </a>F\
       </div>
     </div>
   </footer>
@@ -683,8 +683,16 @@ document.getElementById('registerForm').addEventListener('submit', async functio
 // === Login Logic ===
 document.getElementById('loginForm').addEventListener('submit', async function (e) {
   e.preventDefault();
-  const email = document.querySelector('#loginForm input[type="email"]').value;
-  const password = document.querySelector('#loginForm input[type="password"]').value;
+  const emailInput = document.getElementById('loginEmail');
+  const passwordInput = document.getElementById('loginPassword');
+
+  if (!emailInput || !passwordInput) {
+    alert("Login form not found. Please try again.");
+    return;
+  }
+
+  const email = emailInput.value;
+  const password = passwordInput.value;
 
   try {
     const res = await fetch('https://earnrave-backend-0c5eddaec35e.herokuapp.com/login', {
@@ -696,7 +704,9 @@ document.getElementById('loginForm').addEventListener('submit', async function (
     const data = await res.json();
 
     if (res.ok) {
-      localStorage.setItem('token', data.token);
+      localStorage.setItem('token', data.token); // ✅ save token
+      localStorage.setItem('user', JSON.stringify(data.user)); // ✅ save user (was missing)
+
       alert("Login successful!");
       window.location.href = 'app.html';
     } else {
@@ -706,6 +716,7 @@ document.getElementById('loginForm').addEventListener('submit', async function (
     alert("Login error: " + err.message);
   }
 });
+
 
   
     // === Helpers ===
