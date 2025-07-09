@@ -15,12 +15,61 @@
         <i class="fa-solid fa-user text-xl text-white/70"></i>
       </div>
       <div>
-        <p class="text-lg text-gray-200 font-semibold">Hello, <span id="account-user-email">email@email.com</span></p>
-        <p class="text-md text-white/80">ID: <span id="user-id-display">#RAVE000001</span></p>
-        <p class="text-sm text-white/60">Welcome back</p>
+        <p class="text-sm text-gray-300 font-semibold">Hello, <span id="account-user-email">email@email.com</span></p>
+        <p class="text-sm text-white/70">ID: <span id="user-id-display">#RAVE000001</span></p>
+        <p class="text-xs text-white/50">Welcome back</p>
       </div>
     </div>
+    <div class="flex items-center space-x-4">
+      <button id="notification-btn" class="text-white/70 hover:text-white text-lg">
+        <i class="fa-solid fa-bell"></i>
+      </button>
+      <button id="guide-btn" class="text-white/70 hover:text-white text-lg">
+        <i class="fa-solid fa-circle-question"></i>
+      </button>
+    </div>
   </header>
+  
+  <!-- Notification Modal -->
+  <div id="notification-modal" class="fixed inset-0 bg-black bg-opacity-90 text-white flex flex-col p-6 hidden z-30 transition-transform duration-300 transform translate-y-full">
+    <div class="flex-grow flex flex-col justify-center items-center text-center mt-16">
+      <i class="fa-solid fa-bell text-4xl text-cyan-400 mb-4"></i>
+      <h3 class="text-xl font-bold mb-1">No Notifications</h3>
+      <p class="text-sm text-white/60">You have yet to receive any notifications.</p>
+    </div>
+    <button onclick="document.getElementById('notification-modal').classList.add('hidden'); document.getElementById('notification-modal').classList.add('translate-y-full');" class="mb-12 self-center text-white/70 text-xl z-40">
+      &times;
+    </button>
+  </div>
+  
+  <!-- Guide Modal -->
+  <div id="guide-modal" class="fixed inset-0 bg-black bg-opacity-80 backdrop-blur-sm flex flex-col items-center justify-center p-6 hidden z-30">
+    <div class="bg-white/5 text-white border border-white/10 rounded-xl p-6 w-full max-w-md">
+      <div class="aspect-video bg-black/20 border border-white/10 rounded-lg mb-4 flex items-center justify-center text-white/30">
+        <span>Video Placeholder</span>
+      </div>
+      <p class="text-sm text-white/70 mb-4">
+        Welcome to the platform. Here you can trade assets, monitor your positions, and earn by referring others. Use the tabs below to navigate through the app.
+      </p>
+      <button onclick="document.getElementById('guide-modal').classList.add('hidden')" class="mt-2 w-full py-2 bg-cyan-400 text-black font-bold rounded-lg">Close</button>
+    </div>
+  </div>
+  
+  <script>
+    const notificationBtn = document.getElementById("notification-btn");
+    const notificationModal = document.getElementById("notification-modal");
+    notificationBtn.addEventListener("click", () => {
+      notificationModal.classList.toggle("hidden");
+      setTimeout(() => {
+        notificationModal.classList.toggle("translate-y-full");
+      }, 10);
+    });
+  
+    document.getElementById("guide-btn").addEventListener("click", () => {
+      document.getElementById("guide-modal").classList.remove("hidden");
+    });
+  </script>
+
 
 <main class="flex-1">
   <!-- HUB -->
@@ -76,7 +125,7 @@
         <p class="text-sm text-green-100 mb-4">
           Get <span class="font-bold text-cyan-200">5% of their first deposit</span> when they register and fund their account.
         </p>
-        <button onclick="window.location.href='refer.html'" class="bg-white text-black px-6 py-2 rounded-lg font-semibold hover:bg-gray-100 transition-colors duration-200">
+        <button onclick="showTab('tab-earn')" class="bg-white text-black px-6 py-2 rounded-lg font-semibold hover:bg-gray-100 transition-colors duration-200">
           Refer Now
         </button>
       </div>
@@ -84,35 +133,29 @@
   </section>
 
 
-  <!-- MARKETS -->
-  <section id="tab-markets" class="tab-content hidden px-4 py-6">
-  <div class="max-w-md mx-auto text-center">
-    <div id="tradingview-markets-widget" class="w-full h-[350px] overflow-hidden mb-8"></div>
+  <!-- EARN -->
+  <section id="tab-earn" class="tab-content hidden px-4 py-6">
+    <h1 class="text-2xl font-bold mb-4 text-center">Your Referral Stats</h1>
 
-    <div class="mb-4">
-      <label class="block text-sm mb-1 text-white/70">Stake Amount ($)</label>
-      <div class="flex items-center space-x-2">
-        <button onclick="adjustStake(-10)" class="px-3 py-1 bg-white/10 rounded text-lg">−</button>
-        <input id="stake" type="number" value="10" min="10" step="10" class="w-full px-4 py-2 rounded-lg bg-white/10 border border-white/20 text-white text-center focus:outline-none focus:ring-2 focus:ring-cyan-400" />
-        <button onclick="adjustStake(10)" class="px-3 py-1 bg-white/10 rounded text-lg">+</button>
-      </div>
+    <div id="referral-info" class="bg-white/5 border border-white/10 rounded-xl p-4 mb-6">
+      <p class="mb-2">Referral Code: <span id="referral-code" class="font-mono text-cyan-400"></span></p>
+      
+      <p class="mb-2 flex items-center space-x-2">
+        Referral Link:
+        <span id="referral-link" class="font-mono text-cyan-400 text-sm truncate"></span>
+        <button id="copy-btn" class="text-white/70 hover:text-white text-xs border border-white/20 px-2 py-1 rounded">
+          Copy
+        </button>
+      </p>
+  
+      <p id="copy-status" class="text-green-400 text-sm mt-1 hidden">Copied!</p>
+  
+      <p>Total Referrals: <span id="referral-count" class="font-semibold text-white/80">0</span></p>
+      <p>Referral Earnings: <span id="referral-earnings" class="font-semibold text-green-400">$0.00</span></p>
     </div>
-
-    <div class="pb-6">
-      <label class="block text-sm mb-1 text-white/70">Expires In (mins)</label>
-      <div class="flex items-center space-x-2">
-        <button onclick="adjustExpiration(-1)" class="px-3 py-1 bg-white/10 rounded text-lg">−</button>
-        <input id="expiration" type="number" value="5" min="1" step="1" class="w-full px-4 py-2 rounded-lg bg-white/10 border border-white/20 text-white text-center focus:outline-none focus:ring-2 focus:ring-cyan-400" />
-        <button onclick="adjustExpiration(1)" class="px-3 py-1 bg-white/10 rounded text-lg">+</button>
-      </div>
-      <p class="text-xs text-white/50 mt-1">Expires at: <span id="expiration-time"></span></p>
-    </div>
-
-    <div class="flex justify-between space-x-4 pt-2">
-      <button type="button" class="w-1/2 py-2 bg-white text-black font-semibold rounded-lg transition hover:bg-gray-200">Buy</button>
-      <button type="button" class="w-1/2 py-2 bg-cyan-400 text-black font-semibold rounded-lg transition hover:bg-cyan-300">Sell</button>
-    </div>
-  </div>
+  
+    <h2 class="text-xl font-bold mb-3">Top Referrers</h2>
+    <ul id="leaderboard" class="space-y-3"></ul>
 </section>
 
 
@@ -133,15 +176,8 @@
         </div>
       </div>
   
-      <div class="bg-white/5 border border-white/10 rounded-xl p-4 max-h-64 overflow-y-auto">
-        <h3 class="text-lg font-semibold mb-2">Recent Actions</h3>
-        <ul id="bot-log" class="text-sm text-white/80 space-y-1">
-          <li>📈 19:45 - Buy EUR/USD @ 1.14500 ($10)</li>
-          <li>📉 19:47 - Sell GBP/USD @ 1.27540 ($10)</li>
-          <li>✅ 19:49 - Closed trade with +$4.20 profit</li>
-        </ul>
-      </div>
-  
+      <div id="tradingview-markets-widget" class="w-full h-[350px] overflow-hidden mb-8"></div>
+
       <div class="bg-white/5 border border-white/10 rounded-xl p-4 space-y-4">
         <h3 class="text-lg font-semibold">Control Panel</h3>
         <div class="flex justify-between space-x-4">
@@ -210,16 +246,6 @@
   <!-- ACCOUNT -->
   <section id="tab-account" class="tab-content hidden px-4 py-6">
     <div class="max-w-md mx-auto text-white space-y-6">
-      <!-- User Summary -->
-      <div class="bg-white/5 border border-white/10 rounded-xl p-4 flex items-center space-x-4">
-        <div class="w-14 h-14 rounded-full bg-white/10 flex items-center justify-center text-white text-xl font-bold border border-white/20">
-          <i class="fa-solid fa-user"></i>
-        </div>
-        <div>
-          <p class="text-lg font-bold" id="account-user-email">Loading...</p>
-          <p class="text-sm text-white/70" id="account-user-id">ID: ...</p>
-        </div>
-      </div>
   
       <!-- Quick Actions -->
       <div class="grid grid-cols-2 gap-4">
@@ -276,14 +302,16 @@
   </section>  
 </main>
 
+
+  <!-- NAV -->
 <nav class="fixed bottom-0 left-0 right-0 border-t border-white/10 flex justify-around py-3 text-xs font-light bg-black/80 backdrop-blur-sm z-20">
   <button id="nav-hub" onclick="showTab('tab-hub')" class="tab-btn flex flex-col items-center justify-center text-cyan-400 w-1/5">
     <i class="fa-solid fa-house text-lg mb-1"></i>
     <span>Hub</span>
   </button>
-  <button id="nav-markets" onclick="showTab('tab-markets')" class="tab-btn flex flex-col items-center justify-center text-white/50 w-1/5">
-    <i class="fa-solid fa-chart-simple text-lg mb-1"></i>
-    <span>Markets</span>
+  <button id="nav-earn" onclick="showTab('tab-earn')" class="tab-btn flex flex-col items-center justify-center text-white/50 w-1/5">
+    <i class="fa-solid fa-coins text-lg mb-1"></i>
+    <span>Earn</span>
   </button>
   <button id="nav-trade" onclick="showTab('tab-trade')" class="tab-btn flex flex-col items-center justify-center text-white/50 w-1/5">
     <i class="fa-solid fa-arrow-trend-up text-lg mb-1"></i>
@@ -382,39 +410,78 @@
   </script>
   
   
-  <!-- MARKET JS -->
-  <script id="tab-markets-script">
-    let stakeAmount = 10;
-    let expirationMinutes = 5;
-  
-    function updateMarketInputs() {
-      const stakeInput = document.getElementById("stake");
-      const expirationInput = document.getElementById("expiration");
-      const expirationTimeDisplay = document.getElementById("expiration-time");
-  
-      if (stakeInput) stakeInput.value = stakeAmount;
-      if (expirationInput) expirationInput.value = expirationMinutes;
-  
-      if (expirationTimeDisplay) {
-        const now = new Date();
-        const future = new Date(now.getTime() + expirationMinutes * 60000);
-        const hours = future.getHours().toString().padStart(2, '0');
-        const mins = future.getMinutes().toString().padStart(2, '0');
-        expirationTimeDisplay.textContent = `${hours}:${mins}`;
+  <!-- EARN JS -->
+  <script id="tab-earn-script">
+    document.addEventListener("DOMContentLoaded", async () => {
+      const user = JSON.parse(localStorage.getItem("user"));
+      const token = localStorage.getItem("token");
+
+      if (!user || !token) {
+        window.location.href = 'index.html';
+        return;
       }
-    }
-  
-    function adjustStake(amount) {
-      stakeAmount = Math.max(10, stakeAmount + amount);
-      updateMarketInputs();
-    }
-  
-    function adjustExpiration(change) {
-      expirationMinutes = Math.max(1, expirationMinutes + change);
-      updateMarketInputs();
-    }
-  
-    document.addEventListener("DOMContentLoaded", updateMarketInputs);
+
+      // Show user's referral info
+      const referralCode = user.referral_code || `rave${user.id}`;
+      const referralLink = `https://earnrave.com/signup.html?ref=${referralCode}`;
+
+      document.getElementById("referral-code").textContent = referralCode;
+      document.getElementById("referral-link").textContent = referralLink;
+
+      const copyBtn = document.getElementById("copy-btn");
+      const copyStatus = document.getElementById("copy-status");
+
+      copyBtn.addEventListener("click", () => {
+        navigator.clipboard.writeText(referralLink)
+          .then(() => {
+            copyStatus.classList.remove("hidden");
+            copyBtn.textContent = "Copied!";
+            setTimeout(() => {
+              copyStatus.classList.add("hidden");
+              copyBtn.textContent = "Copy";
+            }, 2000);
+          })
+          .catch(() => alert("Failed to copy"));
+      });
+
+      try {
+        const res = await fetch('https://earnrave-backend-0c5eddaec35e.herokuapp.com/referral/stats', {
+          headers: { Authorization: 'Bearer ' + token }
+        });
+
+        if (res.ok) {
+          const data = await res.json();
+          document.getElementById("referral-count").textContent = data.total_referrals || 0;
+          document.getElementById("referral-earnings").textContent = `$${(data.total_earned || 0).toFixed(2)}`;
+        } else {
+          console.error("Failed to fetch referral stats");
+        }
+
+        const lb = await fetch('https://earnrave-backend-0c5eddaec35e.herokuapp.com/referral/leaderboard');
+        if (lb.ok) {
+          const topUsers = await lb.json();
+          const list = document.getElementById("leaderboard");
+
+          topUsers.forEach((user, index) => {
+            const li = document.createElement("li");
+            li.className = "bg-white/5 border border-white/10 rounded-lg p-3";
+            li.innerHTML = `
+              <div class="flex justify-between items-center">
+                <div>
+                  <p class="text-sm font-bold text-white/90">#${index + 1} - ${user.email}</p>
+                  <p class="text-xs text-white/60">${user.total_referrals} referrals</p>
+                </div>
+                <span class="text-green-400 font-semibold text-sm">$${(user.total_earned || 0).toFixed(2)}</span>
+              </div>
+            `;
+            list.appendChild(li);
+          });
+        }
+
+      } catch (err) {
+        console.error("Error loading referral data:", err);
+      }
+    });
   </script>
 
   <!-- TRADE JS -->
@@ -592,7 +659,7 @@
     }
   
     document.addEventListener("DOMContentLoaded", () => {
-      document.getElementById("nav-markets")?.addEventListener("click", loadMarketsChart);
+      document.getElementById("nav-trade")?.addEventListener("click", loadMarketsChart);
     });
   </script>
   
