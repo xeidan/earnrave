@@ -645,7 +645,6 @@
 // === Register Logic ===
 document.getElementById('registerForm').addEventListener('submit', async function (e) {
   e.preventDefault();
-
   const emailInput = document.querySelector('#registerForm input[type="email"]');
   const passwordInput = document.querySelector('#registerForm input[type="password"]');
 
@@ -669,10 +668,9 @@ document.getElementById('registerForm').addEventListener('submit', async functio
     const data = await res.json();
 
     if (res.ok) {
-      localStorage.setItem('email', email);                         // Save email
-      localStorage.setItem('showInstallPrompt', 'true');            // ✅ Flag for install popup
+      localStorage.setItem('email', email);
       alert("Signup successful! Check your email.");
-      window.location.href = 'otp.html';                            // Proceed to OTP
+      window.location.href = 'otp.html';
     } else {
       alert(data.message || data.error || "Signup failed");
     }
@@ -680,7 +678,6 @@ document.getElementById('registerForm').addEventListener('submit', async functio
     alert("Signup error: " + err.message);
   }
 });
-
 
 
 // === Login Logic ===

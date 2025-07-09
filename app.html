@@ -30,52 +30,6 @@
     </div>
   </header>
 
-
-  <!-- INSTALL PROMPT MODAL -->
-  <div id="install-popup" class="fixed inset-0 bg-black/80 text-white flex flex-col items-center justify-center z-50 hidden">
-    <div class="bg-white/10 border border-white/20 p-6 rounded-xl text-center w-11/12 max-w-sm">
-      <i class="fa-solid fa-download text-3xl text-cyan-400 mb-4"></i>
-      <h2 class="text-xl font-semibold mb-2">Download Enhance App</h2>
-      <p class="text-sm text-white/70 mb-4">Add this app to your home screen for faster access and a better experience.</p>
-      <button id="install-btn" class="w-full py-2 bg-cyan-400 text-black font-semibold rounded-lg">Install Now</button>
-    </div>
-  </div>
-
-  <!-- POP UP JS FOR WEBAPP INSTALL -->
-   <script>
-    let deferredPrompt;
-  window.addEventListener('beforeinstallprompt', (e) => {
-    e.preventDefault();
-    deferredPrompt = e;
-  });
-
-  function triggerInstallPrompt() {
-    if (deferredPrompt) {
-      document.getElementById("install-popup").classList.remove("hidden");
-      document.getElementById("install-btn").addEventListener("click", () => {
-        deferredPrompt.prompt();
-        deferredPrompt.userChoice.then((choiceResult) => {
-          if (choiceResult.outcome === 'accepted') {
-            console.log('User accepted the A2HS prompt');
-          }
-          deferredPrompt = null;
-          document.getElementById("install-popup").classList.add("hidden");
-        });
-      });
-    }
-  }
-
-  document.addEventListener("DOMContentLoaded", () => {
-  if (localStorage.getItem("showInstallPrompt") === "true") {
-    localStorage.removeItem("showInstallPrompt");
-    triggerInstallPrompt();
-  }
-});
-
-  // Example trigger after successful signup
-  // Call triggerInstallPrompt() when you know user has signed up successfully.
-  // Example: triggerInstallPrompt();
-   </script>
   
   <!-- Notification Modal -->
   <div id="notification-modal" class="fixed inset-0 bg-black bg-opacity-90 text-white flex flex-col p-6 hidden z-30 transition-transform duration-300 transform translate-y-full">
