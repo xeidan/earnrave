@@ -9,7 +9,7 @@
 </head>
 <body class="bg-black text-white font-sans min-h-screen flex flex-col">
 
-  <header class="flex justify-between items-center px-4 py-4 sticky top-0 z-20 bg-black/80 backdrop-blur-sm border-b border-white/10">
+  <header class="flex justify-between items-center px-4 py-4 sticky top-0 z-50 bg-black/80 backdrop-blur-sm border-b border-white/10">
     <div class="flex items-center space-x-3">
       <div class="w-12 h-12 flex-shrink-0 flex items-center justify-center rounded-full border border-white/20 bg-transparent">
         <i class="fa-solid fa-user text-xl text-white/70"></i>
@@ -32,7 +32,7 @@
 
   
   <!-- Notification Modal -->
-  <div id="notification-modal" class="fixed inset-0 bg-black bg-opacity-90 text-white flex flex-col p-6 hidden z-30 transition-transform duration-300 transform translate-y-full">
+  <div id="notification-modal" class="fixed inset-0 bg-black bg-opacity-90 text-white flex flex-col p-6 hidden z-40 transition-transform duration-300 transform translate-y-full">
     <div class="flex-grow flex flex-col justify-center items-center text-center mt-16">
       <i class="fa-solid fa-bell text-4xl text-cyan-400 mb-4"></i>
       <h3 class="text-xl font-bold mb-1">No Notifications</h3>
@@ -44,7 +44,7 @@
   </div>
   
   <!-- Guide Modal -->
-  <div id="guide-modal" class="fixed inset-0 bg-black bg-opacity-80 backdrop-blur-sm flex flex-col p-6 hidden z-30">
+  <div id="guide-modal" class="fixed inset-0 bg-black bg-opacity-80 backdrop-blur-sm flex flex-col p-6 hidden z-40">
     <div class="flex-grow flex flex-col justify-center items-center text-center mt-16">
       <div class="bg-white/5 text-white border border-white/10 rounded-xl p-6 w-full max-w-md">
         <div class="aspect-video bg-black/20 border border-white/10 rounded-lg mb-4 flex items-center justify-center text-white/30">
@@ -69,8 +69,13 @@
     });
   
     document.getElementById("guide-btn").addEventListener("click", () => {
-      document.getElementById("guide-modal").classList.remove("hidden");
-    });
+  // Close notification modal if it's open
+  notificationModal.classList.add("hidden");
+  notificationModal.classList.add("translate-y-full");
+
+  // Then show the guide modal
+  document.getElementById("guide-modal").classList.remove("hidden");
+});
   </script>
 
 
