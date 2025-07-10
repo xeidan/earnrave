@@ -158,12 +158,19 @@
   
       <p id="copy-status" class="text-green-400 text-sm mt-1 hidden">Copied!</p>
   
-      <p>Total Referrals: <span id="referral-count" class="font-semibold text-white/80">0</span></p>
-      <p>Referral Earnings: <span id="referral-earnings" class="font-semibold text-green-400">$0.00</span></p>
+      
+      <!-- Account Summary -->
+      <div class="space-y-2 text-white text-sm">
+        <p>Total Referrals: <span id="referral-count" class="font-semibold text-white/80">0</span></p>
+        <p>Balance: <span id="account-balance" class="font-bold text-green-400">$0.00</span></p>
+        <p>Referral Earnings: <span id="account-referral-earnings" class="font-bold text-green-400">$0.00</span></p>
+      </div>
     </div>
   
     <h2 class="text-xl font-bold mb-3">Top Referrers</h2>
     <ul id="leaderboard" class="space-y-3"></ul>
+    <p class="text-sm font-bold text-white/90">#${index + 1} - ${user.rave_id || 'Anonymous'}</p>
+
 </section>
 
 
@@ -202,42 +209,12 @@
   <section id="tab-positions" class="tab-content hidden px-4 py-6">
     <div class="max-w-md mx-auto text-white space-y-6">
       <!-- Open Positions -->
-      <div class="bg-white/5 border border-white/10 rounded-xl p-4 space-y-2">
-        <h2 class="text-lg font-bold mb-1">Open Positions</h2>
-        <ul id="open-positions" class="space-y-3 text-sm text-white/80">
-          <li class="bg-white/10 rounded-lg px-4 py-3 flex justify-between items-center border border-white/10">
-            <div>
-              <p class="font-semibold">EUR/USD</p>
-              <p class="text-xs text-white/60">Buy • $10 @ 1.14500</p>
-              <p class="text-xs text-white/60">Expires: 20:10</p>
-            </div>
-            <span class="text-xs bg-cyan-400 text-black px-3 py-1 rounded-lg font-bold">Running</span>
-          </li>
-        </ul>
-      </div>
-  
-      <!-- Closed Positions -->
-      <div class="bg-white/5 border border-white/10 rounded-xl p-4 space-y-2">
-        <h2 class="text-lg font-bold mb-1">Closed Positions</h2>
-        <ul id="closed-positions" class="space-y-3 text-sm text-white/80">
-          <li class="bg-white/10 rounded-lg px-4 py-3 flex justify-between items-center border border-white/10">
-            <div>
-              <p class="font-semibold">GBP/USD</p>
-              <p class="text-xs text-white/60">Sell • $20 @ 1.27540</p>
-              <p class="text-xs text-white/60">Expired: 19:45</p>
-            </div>
-            <span class="text-xs bg-green-400 text-black px-3 py-1 rounded-lg font-bold">+ $5.40</span>
-          </li>
-          <li class="bg-white/10 rounded-lg px-4 py-3 flex justify-between items-center border border-white/10">
-            <div>
-              <p class="font-semibold">USD/JPY</p>
-              <p class="text-xs text-white/60">Buy • $15 @ 135.00</p>
-              <p class="text-xs text-white/60">Expired: 19:30</p>
-            </div>
-            <span class="text-xs bg-red-400 text-white px-3 py-1 rounded-lg font-bold">− $15.00</span>
-          </li>
-        </ul>
-      </div>
+      <h3 class="text-sm text-gray-400 mb-2">Running Positions (Today)</h3>
+      <ul id="running-positions-list" class="mb-4 space-y-1"></ul>
+
+      <h3 class="text-sm text-gray-400 mb-2">Closed Positions (Earlier)</h3>
+      <ul id="closed-positions-list" class="space-y-1"></ul>
+
     </div>
   </section>  
 
@@ -250,6 +227,15 @@
       <div class="grid grid-cols-2 gap-4">
         <button class="bg-cyan-400 text-black py-3 rounded-xl font-semibold hover:bg-cyan-300 transition">Deposit</button>
         <button class="bg-white text-black py-3 rounded-xl font-semibold hover:bg-gray-100 transition">Withdraw</button>
+      </div>
+  
+      <!-- Account Snapshot -->
+      <div class="bg-white/5 border border-white/10 rounded-xl p-4 space-y-3">
+        <p>Email: <span id="account-email"></span></p>
+        <p>Rave ID: <span id="account-rave-id"></span></p>
+        <p>Available Balance: <span id="account-balance">$0.00</span></p>
+        <p>Referral Earnings: <span id="account-referral-earnings">$0.00</span></p>
+        <p>Total Balance: <span id="account-total-balance">$0.00</span></p>
       </div>
   
       <!-- Account Options -->
@@ -298,7 +284,8 @@
         Built for smart traders. Powered by AI.
       </div>
     </div>
-  </section>  
+  </section>
+    
 </main>
 
 
@@ -443,6 +430,15 @@
           .catch(() => alert("Failed to copy"));
       });
 
+      function maskEmail(email) {
+  const [name, domain] = email.split('@');
+  if (!name || !domain) return "Hidden";
+  const visible = name.slice(0, 2);
+  const masked = '*'.repeat(Math.max(3, name.length - 2));
+  return `${visible}${masked}@${domain}`;
+}
+
+
       try {
         const res = await fetch('https://earnrave-backend-0c5eddaec35e.herokuapp.com/referral/stats', {
           headers: { Authorization: 'Bearer ' + token }
@@ -451,7 +447,7 @@
         if (res.ok) {
           const data = await res.json();
           document.getElementById("referral-count").textContent = data.total_referrals || 0;
-          document.getElementById("referral-earnings").textContent = `$${(data.total_earned || 0).toFixed(2)}`;
+          document.getElementById("referral-earnings").textContent = `$${(data.reward_balance || 0).toFixed(2)}`;
         } else {
           console.error("Failed to fetch referral stats");
         }
@@ -467,10 +463,10 @@
             li.innerHTML = `
               <div class="flex justify-between items-center">
                 <div>
-                  <p class="text-sm font-bold text-white/90">#${index + 1} - ${user.email}</p>
+                  <p class="text-sm font-bold text-white/90">#${index + 1} - ${maskEmail(user.email)}</p>
                   <p class="text-xs text-white/60">${user.total_referrals} referrals</p>
                 </div>
-                <span class="text-green-400 font-semibold text-sm">$${(user.total_earned || 0).toFixed(2)}</span>
+                <span class="text-green-400 font-semibold text-sm">$${parseFloat(user.total_earned || 0).toFixed(2)}</span>
               </div>
             `;
             list.appendChild(li);
@@ -521,83 +517,151 @@
       });
     });
   </script>
+  
 
   <!-- POSITION JS -->
   <script id="tab-positions-script">
     document.addEventListener("DOMContentLoaded", () => {
-      const openPositions = document.getElementById("open-positions");
-      const closedPositions = document.getElementById("closed-positions");
+      const token = localStorage.getItem("token");
+      const backendUrl = "https://earnrave-backend-0c5eddaec35e.herokuapp.com";
   
-      // Example position data
-      const sampleOpen = [
-        {
-          pair: "EUR/USD",
-          action: "Buy",
-          amount: 10,
-          entry: 1.14500,
-          expires: "20:10"
-        }
-      ];
+      const runningList = document.getElementById("running-positions-list");
+      const closedList = document.getElementById("closed-positions-list");
   
-      const sampleClosed = [
-        {
-          pair: "GBP/USD",
-          action: "Sell",
-          amount: 20,
-          entry: 1.27540,
-          outcome: "+ $5.40",
-          status: "win"
-        },
-        {
-          pair: "USD/JPY",
-          action: "Buy",
-          amount: 15,
-          entry: 135.00,
-          outcome: "− $15.00",
-          status: "loss"
-        }
-      ];
-  
-      if (openPositions) {
-        openPositions.innerHTML = sampleOpen.map(pos => `
-          <li class="bg-white/10 rounded-lg px-4 py-3 flex justify-between items-center border border-white/10">
-            <div>
-              <p class="font-semibold">${pos.pair}</p>
-              <p class="text-xs text-white/60">${pos.action} • $${pos.amount} @ ${pos.entry}</p>
-              <p class="text-xs text-white/60">Expires: ${pos.expires}</p>
-            </div>
-            <span class="text-xs bg-cyan-400 text-black px-3 py-1 rounded-lg font-bold">Running</span>
-          </li>
-        `).join("");
+      if (!runningList || !closedList) {
+        console.warn("Missing positions containers.");
+        return;
       }
   
-      if (closedPositions) {
-        closedPositions.innerHTML = sampleClosed.map(pos => `
-          <li class="bg-white/10 rounded-lg px-4 py-3 flex justify-between items-center border border-white/10">
-            <div>
-              <p class="font-semibold">${pos.pair}</p>
-              <p class="text-xs text-white/60">${pos.action} • $${pos.amount} @ ${pos.entry}</p>
-              <p class="text-xs text-white/60">Expired</p>
-            </div>
-            <span class="text-xs ${pos.status === 'win' ? 'bg-green-400 text-black' : 'bg-red-400 text-white'} px-3 py-1 rounded-lg font-bold">${pos.outcome}</span>
-          </li>
-        `).join("");
+      function formatCountdown(expiresAt) {
+        const now = new Date();
+        const expiry = new Date(expiresAt);
+        const diffMs = expiry - now;
+        if (diffMs <= 0) return "00:00";
+  
+        const totalSec = Math.floor(diffMs / 1000);
+        const mins = String(Math.floor(totalSec / 60)).padStart(2, '0');
+        const secs = String(totalSec % 60).padStart(2, '0');
+        return `${mins}:${secs}`;
       }
+  
+      async function loadPositions() {
+        try {
+          const res = await fetch(`${backendUrl}/positions/me`, {
+            headers: { Authorization: "Bearer " + token },
+          });
+  
+          const positions = await res.json();
+          if (!Array.isArray(positions)) return;
+  
+          runningList.innerHTML = "";
+          closedList.innerHTML = "";
+  
+          positions.forEach(pos => {
+            const stake = parseFloat(pos.stake || 0);
+            const profit = isNaN(parseFloat(pos.profit)) ? 0 : parseFloat(pos.profit);
+            const entry = parseFloat(pos.entry || 0).toFixed(5);
+            const expiresAt = new Date(pos.expires_at);
+            const isWin = pos.result === "win";
+  
+            const li = document.createElement("li");
+            li.className = "bg-white/10 rounded-lg px-4 py-3 flex justify-between items-center border border-white/10";
+  
+            if (pos.status === "open") {
+              const countdown = formatCountdown(expiresAt);
+              li.innerHTML = `
+                <div>
+                  <p class="font-semibold">${pos.pair}</p>
+                  <p class="text-xs text-white/60">Stake: $${stake} @ ${entry}</p>
+                  <p class="text-xs text-white/60">Expires in: <span class="countdown" data-expires="${pos.expires_at}">${countdown}</span></p>
+                </div>
+                <span class="text-xs bg-cyan-400 text-black px-3 py-1 rounded-lg font-bold">Running</span>
+              `;
+              runningList.appendChild(li);
+            } else {
+              li.innerHTML = `
+                <div>
+                  <p class="font-semibold">${pos.pair}</p>
+                  <p class="text-xs text-white/60">${pos.result?.toUpperCase() || 'N/A'} • $${stake} @ ${entry}</p>
+                  <p class="text-xs text-white/60">Closed</p>
+                </div>
+                <span class="text-xs ${isWin ? 'bg-green-400 text-black' : 'bg-red-400 text-white'} px-3 py-1 rounded-lg font-bold">
+                  ${isNaN(profit) ? "$0.00" : (profit >= 0 ? '+' : '') + "$" + profit.toFixed(2)}
+                </span>
+              `;
+              closedList.appendChild(li);
+            }
+          });
+  
+          if (!runningList.children.length) {
+            runningList.innerHTML = "<li class='text-gray-400 text-sm'>No running positions</li>";
+          }
+  
+          if (!closedList.children.length) {
+            closedList.innerHTML = "<li class='text-gray-400 text-sm'>No closed trades yet</li>";
+          }
+  
+          // Live countdown update
+          document.querySelectorAll(".countdown").forEach(span => {
+            const expiresAt = new Date(span.dataset.expires);
+            const diff = expiresAt - new Date();
+            if (diff > 0) {
+              const mins = String(Math.floor(diff / 60000)).padStart(2, '0');
+              const secs = String(Math.floor((diff % 60000) / 1000)).padStart(2, '0');
+              span.textContent = `${mins}:${secs}`;
+            } else {
+              span.textContent = "00:00";
+            }
+          });
+  
+        } catch (err) {
+          console.error("Failed to load positions", err);
+        }
+      }
+  
+      loadPositions();
+      setInterval(loadPositions, 100000); // Refresh every 10s
     });
   </script>
 
   <!--  ACCOUNT JS-->
   <script id="tab-account-script">
-    document.addEventListener("DOMContentLoaded", () => {
-      const emailEl = document.getElementById("account-user-email");
-      const idEl = document.getElementById("account-user-id");
+    document.addEventListener("DOMContentLoaded", async () => {
+      const token = localStorage.getItem("token");
+      const user = JSON.parse(localStorage.getItem("user"));
   
-      if (emailEl) emailEl.textContent = user.email || "Loading...";
-      if (idEl) idEl.textContent = `ID: ${formatUserId(user.id)}`;
+      if (!user || !token) {
+        window.location.href = "index.html";
+        return;
+      }
+  
+      try {
+        const res = await fetch("https://earnrave-backend-0c5eddaec35e.herokuapp.com/account/me", {
+          headers: { Authorization: "Bearer " + token }
+        });
+  
+        if (!res.ok) throw new Error("Failed to fetch account");
+  
+        const data = await res.json();
+  
+        const emailEl = document.getElementById("account-email");
+        const raveIdEl = document.getElementById("account-rave-id");
+        const rewardEl = document.getElementById("account-referral-earnings");
+        const availableEl = document.getElementById("account-balance");
+  
+        if (emailEl) emailEl.textContent = data.email || "N/A";
+        if (raveIdEl) raveIdEl.textContent = `#${data.rave_id || "N/A"}`;
+        if (rewardEl) rewardEl.textContent = `$${parseFloat(data.reward_balance || 0).toFixed(2)}`;
+        if (availableEl) availableEl.textContent = `$${parseFloat(data.available_balance || 0).toFixed(2)}`;
+  
+      } catch (err) {
+        console.error("Account tab error:", err);
+      }
     });
   </script>
-
-
+  
+  
+ 
   <!-- TRADING-VIEW JS -->
   <script src="https://s3.tradingview.com/tv.js"></script>
   <script id="tradingview-script">
